@@ -1,3 +1,6 @@
+"""
+This file contains various helper function to help with the iCS software
+"""
 import importlib
 import os
 import platform
@@ -6,23 +9,33 @@ import traceback
 
 
 def check_is_linux_platform():
+    """
+    checks for Linux platform
+    """
     return platform.system() == 'Linux'
 
 
 def check_is_win_platform():
+    """
+    checks for windows platform
+    """
     return platform.system() == 'Windows'
 
 
-# this function imports the icsClient Python module
-# the path and module name are defined here if they aren't given above
 def import_from_path(rel_module_path, module_name):
+    """
+    this function imports the icsClient Python module
+    the path and module name are defined here if they aren't given above
+    :param rel_module_path: path to the ics lib relative to this file
+    :param module_name:  module named can usually be left empty
+    :return: the ics module
+    """
     # get dir of THIS file
     # cwd is not defined to be file dir
     script_path = os.path.realpath(__file__)
     script_path = os.path.abspath(script_path)
 
-    # rel_module_path defines the location of the python module relative to
-    # main.py
+    # rel_module_path defines the location of the python module relative to this file
     if rel_module_path == "":
         if check_is_win_platform():
             rel_module_path = os.path.dirname(script_path)
@@ -70,7 +83,7 @@ def import_from_path(rel_module_path, module_name):
                 "   => make sure the LD_LIBRARY_PATH environment variable is set properly.")
             try:
                 path = os.environ['LD_LIBRARY_PATH']
-            except KeyError as exc:
+            except KeyError:
                 path = "--undefined--"
             print(f"   => LD_LIBRARY_PATH == {path}")
 
