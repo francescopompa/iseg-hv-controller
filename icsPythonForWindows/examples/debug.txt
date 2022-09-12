@@ -1,0 +1,6 @@
+# Log File created for iCSPythonDataLogger.py on Wed Aug  5 09:18:02 2020
+# info Wed Aug  5 09:18:02 2020 : Script name == pythonDataLogger.py
+# info Wed Aug  5 09:18:03 2020 : Connection to ws://ics.iseg-hv.com:8080 established with supervisor session ID .
+# info Wed Aug  5 09:18:03 2020 : mySessionId == 5efede22e14c3-95
+# info Wed Aug  5 09:18:03 2020 : writing CSV file c:\Daten\icsPythonForWindows\isegControl2 (64 bit)\isegcontrol_200409_64\examples\data_log_20200805.csv
+# info Wed Aug  5 09:18:03 2020 : Entering execution loop.
