@@ -1,8 +1,8 @@
 """
 SEE README.md
 """
-import ics_helper
 import logging
+import ics_client
 
 
 
@@ -15,11 +15,14 @@ def main():
                         handlers=[logging.StreamHandler(), logging.FileHandler("hv_controller.log")])
     logging.info("Started")
 
-    connectionName = "new_iCS_connection"
-    # connectionParameters = "ws://localhost:1234"
-    connectionLogin = "demo"
-    connectionPassword = "demo"
+    connection_name = "new_iCS_connection"
+    # connection_parameters = "ws://localhost:1234"
+    connection_login = "demo"
+    connection_password = "demo"
+
+
 
 
 if __name__ == '__main__':
     main()
+
