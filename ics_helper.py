@@ -6,6 +6,7 @@ import os
 import platform
 import sys
 import traceback
+import logging
 
 
 def check_is_linux_platform():
@@ -66,30 +67,27 @@ def import_from_path(rel_module_path, module_name):
         # print traceback
         exc_type, exc_value, exc_traceback = sys.exc_info()
         lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        print("".join('!! ' + line for line in lines))
+        logging.error("".join('!! ' + line for line in lines))
 
-        print(f"Failed to load the module \"{module_name}\"")
-        print(f"   from path \"{rel_module_path}\"")
+        logging.error(f"Failed to load the module \"{module_name}\" \n from path \"{rel_module_path}\"")
         full_path = os.path.join(rel_module_path, module_name)
         if check_is_linux_platform():
             full_path = full_path + ".so"
         if not os.path.exists(full_path):
-            print(f"   {full_path} doesn't exist")
-            print("   => make sure that the module is found at this location")
-        print("= The Python modules links to shared Qt libraries")
-        print("   => make sure the Qt libraries are found")
+            logging.warning(f"   {full_path} doesn't exist \n \t\t=> make sure that the module is found at this location")
+        logging.warning("The Python modules links to shared Qt libraries\n\t\t  => make sure the Qt libraries are found")
         if check_is_linux_platform():
-            print(
-                "   => make sure the LD_LIBRARY_PATH environment variable is set properly.")
+            error_msg ="   => make sure the LD_LIBRARY_PATH environment variable is set properly."
             try:
                 path = os.environ['LD_LIBRARY_PATH']
             except KeyError:
                 path = "--undefined--"
-            print(f"   => LD_LIBRARY_PATH == {path}")
+            error_msg += f"   => LD_LIBRARY_PATH == {path}"
 
+            logging.warning(error_msg)
         return 0
 
-    print(
+    logging.info(
         f"Sucessfully imported module \"{module_name}\" "
         "(version {ics_client.getVersion()}) from path \"{rel_module_path}\"")
     return ics_client
