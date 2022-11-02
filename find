@@ -1,0 +1,3 @@
+https://unix.stackexchange.com/questions/295238/how-to-connect-to-device-via-ssh-over-direct-ethernet-connection
+sudo dnsmasq -d -C /dev/null --port=0 --domain=localdomain --interface=enp2s0 --dhcp-range=192.168.0.100,192.168.0.200
+

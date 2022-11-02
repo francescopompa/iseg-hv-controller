@@ -13,11 +13,12 @@ class IcsClient:
     """
 
     def __init__(
-            self,
-            connection_name="ics_connection1",
-            connection_parameters="ws://localhost:1234",
-            connection_login="demo",
-            connection_password="demo"):
+        self,
+        connection_name="ics_connection1",
+        connection_parameters="ws://localhost:1234",
+        connection_login="demo",
+        connection_password="demo",
+    ):
         # import icsClient module
         self.ics_api = ics_helper.import_from_path("", "")
 
@@ -37,6 +38,7 @@ class IcsClient:
             all_connections = self.ics_api.getConnections()
             for connection in all_connections:
                 connection.disconnect()
+
         disconnect_all()
         # end connection
 
@@ -44,8 +46,13 @@ class IcsClient:
         """
         connects to the actual crate with the param of this class
         """
-        connection = ics_helper.establish_connection(self.ics_api, self.connection_name, self.connection_parameters, self.connection_login,
-                                                      self.connection_password)
-        if type(connection) != self.ics_api.connection:
+        self.connection = ics_helper.establish_connection(
+            self.ics_api,
+            self.connection_name,
+            self.connection_parameters,
+            self.connection_login,
+            self.connection_password,
+        )
+        if not isinstance(self.connection, self.ics_api.connection):
             logging.error("Failed to connect => Exit.")
             sys.exit(1)

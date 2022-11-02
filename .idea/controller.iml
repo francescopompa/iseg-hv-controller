@@ -64,7 +64,7 @@
       <excludeFolder url="file://$MODULE_DIR$/icsPythonForWindows/bin/python-3.7.1/lib/xml" />
       <excludeFolder url="file://$MODULE_DIR$/icsPythonForWindows/bin/python-3.7.1/lib/xmlrpc" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Poetry (controller) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

@@ -6,6 +6,7 @@ authors = ["Marc Martini <marc.martini@student.kit.edu>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+tomli = { version = "^2.0.1", hon = "<3.11" }
 
 [tool.poetry.dev-dependencies]
 
