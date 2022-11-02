@@ -19,7 +19,7 @@ def main():
     )
     logging.info("Started")
 
-    server = ics_client.IcsClient(  # bad name
+    server = ics_client.IcsClient(  #  TODO bad name
         connection_name="ics_connection" + time.asctime(),
         connection_parameters="ws://192.168.0.101:8080",
         connection_login="admin",
