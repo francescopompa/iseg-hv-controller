@@ -15,11 +15,13 @@ def main():
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s::%(levelname)s::%(filename)s:%(funcName)s:%(lineno)d::\t%(message)s",
-        handlers=[logging.StreamHandler(), logging.FileHandler("hv_controller.log")],
+        handlers=[
+            logging.StreamHandler(),
+            logging.FileHandler("hv_controller.log")],
     )
     logging.info("Started")
 
-    server = ics_client.IcsClient(  #  TODO bad name
+    server = ics_client.IcsClient(  # TODO bad name
         connection_name="ics_connection" + time.asctime(),
         connection_parameters="ws://192.168.0.10:8080",
         connection_login="admin",
@@ -70,7 +72,7 @@ def main():
     result = server.connection.rawCommand(result_cmd)
     print(result)
 
-    time.sleep(10)
+    time.sleep(5)
     # Important to wait here so the crate gets booted up or whatever
     other_crate_cmd = server.connection.crates
     print(f"Other crate cmd: {other_crate_cmd}")
@@ -85,12 +87,13 @@ def main():
     logging.info(f"All modules {all_modules}.")
 
     all_channels = []
-    for i, mod in enumerate(all_modules):
-        all_channels.append(mod.channels)
+    for mod in all_modules:
+        for i, channel in enumerate(mod.channels):
+            all_channels.append(channel)
     logging.info(f"All channels {all_channels}.")
 
     # time to fill the cache from iCSservice
-    time.sleep(10)
+    time.sleep(5)
 
     for mod in all_modules:
         logging.info(
@@ -102,41 +105,47 @@ def main():
                      """
         )
 
-    for i_mod, mod_channels in enumerate(all_channels):
-        print(f"Module: {i_mod}")
-        for channel in mod_channels:
-            print(channel)
-            status_v_nominal = channel.getStatusVoltageNominal()
-            control_v_set = channel.getControlVoltageSet
-            status_v_measure = channel.getStatusVoltageMeasure()
-            status_c_nominal = channel.getStatusCurrentNominal()
-            control_c_set = channel.getControlCurrentSet()
-            status_c_measure = channel.getStatusCurrentMeasure()
-            status_v_limit_exceed = channel.getStatusVoltageLimitExceeded()
-            status_c_limit_exceed = channel.getStatusCurrentLimitExceeded()
-            status_current_trip = channel.getStatusTrip()
-            status_on = channel.getStatusOn()
-            status_emergency = channel.getStatusEmergency()
-            setup_delayed_trip_action = channel.getSetupDelayedTripAction()
-            setup_delayed_trip_time = channel.getSetupDelayedTripTime()
-            print(
-                f"""
-                status_v_nominal {status_v_nominal}
-                control_v_set {control_v_set}
-                status_v_measure {status_v_measure}
-                status_c_nominal {status_c_nominal}
-                control_c_set {control_c_set}
-                status_c_measure {status_c_measure}
-                status_v_limit_exceed {status_v_limit_exceed}
-                status_c_limit_exceed {status_c_limit_exceed}
-                status_current_trip  {status_current_trip}
-                status_on  {status_on}
-                status_emergency  {status_emergency}
-                setup_delayed_trip_action  {setup_delayed_trip_action}
-                setup_delayed_trip_time  {setup_delayed_trip_time}
-                """
-            )
+    for channel in all_channels:
+        # TODO move alle these infos into other method
+        print(channel.module)
+        print(channel)
+        status_v_nominal = channel.getStatusVoltageNominal()
+        control_v_set = channel.getControlVoltageSet
+        status_v_measure = channel.getStatusVoltageMeasure()
+        status_c_nominal = channel.getStatusCurrentNominal()
+        control_c_set = channel.getControlCurrentSet()
+        status_c_measure = channel.getStatusCurrentMeasure()
+        status_v_limit_exceed = channel.getStatusVoltageLimitExceeded()
+        status_c_limit_exceed = channel.getStatusCurrentLimitExceeded()
+        status_current_trip = channel.getStatusTrip()
+        status_on = channel.getStatusOn()
+        status_emergency = channel.getStatusEmergency()
+        setup_delayed_trip_action = channel.getSetupDelayedTripAction()
+        setup_delayed_trip_time = channel.getSetupDelayedTripTime()
+        print(
+            f"""
+            status_v_nominal {status_v_nominal}
+            control_v_set {control_v_set}
+            status_v_measure {status_v_measure}
+            status_c_nominal {status_c_nominal}
+            control_c_set {control_c_set}
+            status_c_measure {status_c_measure}
+            status_v_limit_exceed {status_v_limit_exceed}
+            status_c_limit_exceed {status_c_limit_exceed}
+            status_current_trip  {status_current_trip}
+            status_on  {status_on}
+            status_emergency  {status_emergency}
+            setup_delayed_trip_action  {setup_delayed_trip_action}
+            setup_delayed_trip_time  {setup_delayed_trip_time}
+            """
+        )
+    test_channel = all_channels[0]
+    test_channel.setControlCurrentSet(1)
+    test_channel.setControlVoltageSet(200)
+    test_channel.setControlOn(1)
 
 
 if __name__ == "__main__":
+    # TODO make it so starting from shell without commands uses the values defined by config and with some commands sends those
+    # TODO add argparse (see sphe_processor scripts project)
     main()

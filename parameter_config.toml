@@ -1,0 +1,132 @@
+[Server]
+ip = "192.168.0.10"
+port = "8080"
+username = "admin"
+password = "password"
+
+[Defaults]
+voltage = 500 # Volt
+trip_current = 0.1 # Ampere?
+#what else ?
+
+[ch1]
+addr = "0.0.0"
+voltage = 1000
+
+
+[ch2]
+addr = "0.0.1"
+
+[ch3]
+addr = "0.0.2"
+
+[ch4]
+addr = "0.0.3"
+
+[ch5]
+addr = "0.0.4"
+
+[ch6]
+addr = "0.0.5"
+
+[ch7]
+addr = "0.0.6"
+
+[ch8]
+addr = "0.0.7"
+
+[ch9]
+addr = "0.0.8"
+
+[ch10]
+addr = "0.0.9"
+
+[ch11]
+addr = "0.0.10"
+
+[ch12]
+addr = "0.0.11"
+
+[ch13]
+addr = "0.0.12"
+
+[ch14]
+addr = "0.0.13"
+
+[ch15]
+addr = "0.0.14"
+
+[ch16]
+addr = "0.0.15"
+
+[ch17]
+addr = "0.1.0"
+
+[ch18]
+addr = "0.1.1"
+
+[ch19]
+addr = "0.1.2"
+
+[ch20]
+addr = "0.1.3"
+
+[ch21]
+addr = "0.1.4"
+
+[ch22]
+addr = "0.1.5"
+
+[ch23]
+addr = "0.1.6"
+
+[ch24]
+addr = "0.1.7"
+
+[ch25]
+addr = "0.1.8"
+
+[ch26]
+addr = "0.1.9"
+
+[ch27]
+addr = "0.1.10"
+
+[ch28]
+addr = "0.1.11"
+
+[ch29]
+addr = "0.1.12"
+
+[ch30]
+addr = "0.1.13"
+
+[ch31]
+addr = "0.1.14"
+
+[ch32]
+addr = "0.1.15"
+
+[ch33]
+addr = "0.2.0"
+
+[ch34]
+addr = "0.2.1"
+
+[ch35]
+addr = "0.2.2"
+
+[ch36]
+addr = "0.2.3"
+
+[ch37]
+addr = "0.2.4"
+
+[ch38]
+addr = "0.2.5"
+
+[ch39]
+addr = "0.2.6"
+
+[ch40]
+addr = "0.2.7"
