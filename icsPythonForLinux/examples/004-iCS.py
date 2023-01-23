@@ -10,9 +10,9 @@ import clientCommon
 
 connectionName = "new_iCS_connection"
 #connectionParameters = "ws://localhost"
-connectionParameters = "ws://ics.iseg-hv.com:8080"
-connectionLogin = "demo"
-connectionPassword = "demo"
+connectionParameters = "ws://192.168.0.10:8080"
+connectionLogin = "admin"
+connectionPassword = "password"
 
 ## import icsClient module
 #icsClient = clientCommon.importFromPath("/usr/lib", "libicsClientPython3")

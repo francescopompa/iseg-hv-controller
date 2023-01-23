@@ -21,7 +21,7 @@ def main():
 
     server = ics_client.IcsClient(  #  TODO bad name
         connection_name="ics_connection" + time.asctime(),
-        connection_parameters="ws://192.168.0.101:8080",
+        connection_parameters="ws://192.168.0.10:8080",
         connection_login="admin",
         connection_password="password",
     )
@@ -70,6 +70,8 @@ def main():
     result = server.connection.rawCommand(result_cmd)
     print(result)
 
+    time.sleep(10)
+    # Important to wait here so the crate gets booted up or whatever
     other_crate_cmd = server.connection.crates
     print(f"Other crate cmd: {other_crate_cmd}")
 
