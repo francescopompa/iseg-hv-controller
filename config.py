@@ -55,7 +55,7 @@ def create_pydantic_validation_class():
     return validation_cls
 
 
-class Config:
+class ProgramConfig:
     # validation class is dynamically created to reflect the 40 ch. else they'd have to be hardcoded
     # might have been cleaner that way
     validation_cls = create_pydantic_validation_class()
@@ -84,7 +84,12 @@ class Config:
                 logging.error(f"Address {elem} is not unique!!")
                 raise ValueError(f"Address {elem} is not unique!!")
 
+    def apply_config(self, ics_client):
+        """
+        apply the whole config
+        """
+        ...
 
 if __name__ == "__main__":
-    c = Config()
+    c = ProgramConfig()
     print(c.config)

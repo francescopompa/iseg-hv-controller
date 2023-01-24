@@ -3,7 +3,9 @@ This Class is used to talk to the iseg HV and give commands
 """
 import logging
 import sys
-import ics_helper
+import ICS_Helper
+import time
+import json
 
 
 class IcsClient:
@@ -20,7 +22,7 @@ class IcsClient:
         connection_password="demo",
     ):
         # import icsClient module
-        self.ics_api = ics_helper.import_from_path("", "")
+        self.ics_api = ICS_Helper.import_from_path("", "")
 
         if not self.ics_api:
             logging.error("Failed to import icsClient module => Exit.")
@@ -46,7 +48,7 @@ class IcsClient:
         """
         connects to the actual crate with the param of this class
         """
-        self.connection = ics_helper.establish_connection(
+        self.connection = ICS_Helper.establish_connection(
             self.ics_api,
             self.connection_name,
             self.connection_parameters,
@@ -56,3 +58,47 @@ class IcsClient:
         if not isinstance(self.connection, self.ics_api.connection):
             logging.error("Failed to connect => Exit.")
             sys.exit(1)
+
+        # Power on CC24 crate with websocket command
+        power_frame = {
+            "i": "<session_id>",
+            "t": "request",
+            "c": [
+                {
+                    "c": "getItem",
+                    "p": {
+                        "p": {"l": "0", "a": "1000", "c": ""},
+                        "i": "Control.power",
+                        "v": "",
+                        "u": "",
+                    },
+                }
+            ],
+            "r": "websocket",
+        }
+        power_frame = json.dumps(power_frame)  # Convert to json string
+        self.connection.rawCommand(power_frame)
+        print(power_frame)
+
+        # Check the result of the previous power on command
+        result_cmd = {
+            "i": "<session_id>",
+            "t": "request",
+            "c": [
+                {
+                    "c": "setItem",
+                    "p": {
+                        "p": {"l": "0", "a": "1000", "c": ""},
+                        "i": "Control.power",
+                        "v": "1",
+                        "u": "",
+                    },
+                }
+            ],
+            "r": "websocket",
+        }
+        result_cmd = json.dumps(result_cmd)
+        result = self.connection.rawCommand(result_cmd)
+        print(result)
+
+        time.sleep(5)
