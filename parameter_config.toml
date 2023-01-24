@@ -5,8 +5,10 @@ username = "admin"
 password = "password"
 
 [Defaults]
-voltage = 500 # Volt
-trip_current = 0.1 # Ampere?
+voltage = 700 # Volt
+ramp_speed = 100 # V/s
+trip_current = 0.0001 # Ampere?
+# see that its 350 microA
 #what else ?
 
 [ch1]

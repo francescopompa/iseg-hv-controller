@@ -148,4 +148,6 @@ def main():
 if __name__ == "__main__":
     # TODO make it so starting from shell without commands uses the values defined by config and with some commands sends those
     # TODO add argparse (see sphe_processor scripts project)
+     # TODO gitlab
+     # TODO cmd on off !!
     main()

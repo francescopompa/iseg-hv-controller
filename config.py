@@ -1,4 +1,9 @@
 import logging
+from pydantic import BaseModel, validator, Field
+from ipaddress import IPv4Address
+from typing import Optional
+from collections import Counter
+import re
 
 try:
     import tomllib
@@ -6,45 +11,80 @@ except ModuleNotFoundError:
     import tomli as tomllib
 
 
+def create_pydantic_validation_class():
+    class ChannelConfigSection(BaseModel):
+        addr: str
+        voltage: Optional[float] = None
+        ramp_speed: Optional[float] = None
+        trip_current: Optional[float] = None
+
+        @validator("addr")
+        def addr_crate_module_channel_checker(cls, v):
+            if re.match(r"\d{1,2}\.\d{1,2}\.\d{1,2}", v) is None:
+                raise ValueError(
+                    "not a correct iseg address \n"
+                    '(must be like [crate_number].[module_number].[channel_number] eg. "0.1.2")'
+                )
+            return v
+
+    class DefaultsConfigSection(BaseModel):
+        voltage: float
+        ramp_speed: float
+        trip_current: float
+
+    class ServerConfigSection(BaseModel):
+        ip: IPv4Address
+        port: int
+        username: str
+        password: str
+
+    class ConfigValidatorModel(BaseModel):
+        Server: ServerConfigSection
+        Defaults: DefaultsConfigSection
+
+    # dynamicly create entry for the 40 channel entries
+    cls_annotations = {f"ch{i}": ChannelConfigSection for i in range(1, 40 + 1)}
+    class_appendages = {
+        "ch" + str(i): Field(ChannelConfigSection) for i in range(1, 40 + 1)
+    }
+    class_appendages.update({"__annotations__": cls_annotations})
+    validation_cls = type(
+        "ConfigValidationClass", (ConfigValidatorModel,), class_appendages
+    )
+
+    return validation_cls
+
+
 class Config:
+    # validation class is dynamically created to reflect the 40 ch. else they'd have to be hardcoded
+    # might have been cleaner that way
+    validation_cls = create_pydantic_validation_class()
+    config: validation_cls
+
     def __init__(self, file="parameter_config.toml"):
         self.file = file
-        self.config_dict = {}
         self.load()
+        self.control_uniqueness_addresses()
 
     def load(self):
-        with open(self.file, 'rb') as f:
+        with open(self.file, "rb") as f:
             try:
-                self.config_dict = tomllib.load(f)
+                data = tomllib.load(f)
+                self.config = self.validation_cls(**data)
             except tomllib.TOMLDecodeError as e:
-                logging.exception("Couldnt parse/load toml parameter config")
+                logging.exception("Couldn't parse/load toml parameter config")
 
-    def check_key_completeness(self):
-        keys = self.config_dict.keys()
+    def control_uniqueness_addresses(self):
+        d = self.config.dict()
+        channels = [d[f"ch{i}"] for i in range(1, 40 + 1)]
+        channel_addresses = [ch['addr'] for ch in channels]
+        counted = Counter(channel_addresses)
+        for elem in counted:
+            if counted[elem] > 1:
+                logging.error(f"Address {elem} is not unique!!")
+                raise ValueError(f"Address {elem} is not unique!!")
 
-        # First check if the top level keys exist
-        if 'Server' in keys and 'Defaults' in keys:
 
-            # Then check the entries of Server
-            for key in ['ip', 'port', 'username', 'password']:
-                if key not in self.config_dict['Server'].keys():
-                    return False
-
-            # Check The Channel Defaults
-            for key in ['voltage', 'trip_current']:
-                if key not in self.config_dict['Defaults'].keys():
-                    return False
-
-            # Check if all 40 channel entrys exist and have an addr attribute
-            for i in range(40+1):
-                channel_key = 'ch' + str(i)
-                if channel_key not in keys or 'addr' not in self.config_dict[channel_key].keys():
-                    return False
-
-    def check_server_values(self):
-        # TODO connection parameters
-        pass
-    def check_channel_values(self):
-        # TODO check defaults + channels
-        # TODO especially check channel addresses
-        pass
+if __name__ == "__main__":
+    c = Config()
+    print(c.config)

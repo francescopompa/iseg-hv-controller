@@ -7,6 +7,7 @@ authors = ["Marc Martini <marc.martini@student.kit.edu>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 tomli = { version = "^2.0.1", markers = "python_version <'3.11'" }
+pydantic = "^1.10.4"
 
 [tool.poetry.dev-dependencies]
 
