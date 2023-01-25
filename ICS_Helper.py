@@ -3,12 +3,11 @@ This file contains various helper function to help with the iCS software
 most importantly an import function for the api
 """
 import importlib
+import logging
 import os
 import platform
-import time
 import sys
 import traceback
-import logging
 
 
 def import_from_path(rel_module_path, module_name):

@@ -1,11 +1,13 @@
 """
 This Class is used to talk to the iseg HV and give commands
 """
+import json
 import logging
 import sys
-import ICS_Helper
 import time
-import json
+from typing import Optional, Dict
+import ICS_Helper
+from config import ProgramConfig
 
 
 class IcsClient:
@@ -13,6 +15,8 @@ class IcsClient:
     Object to talk with the isc of the iseg HV
     The isc library needs to be correctly setup see ics_helper.py for more
     """
+
+    channels_dict: Optional[Dict[int, object]] = {}
 
     def __init__(
         self,
@@ -155,3 +159,18 @@ class IcsClient:
             logging.warning('The connection "%s" already exists', connection_name)
 
         return self.__wait_for_connection(connection_name, connection_ip)
+
+    def load_channels(self, address_channel_map):
+        """
+        has to be called with a valid mapping in  a config
+         currently from commander
+        """
+        all_modules = self.connection.getModules()
+
+        hardware_channels = {}
+        for mod in all_modules:
+            for channel in mod.channels:
+                channel_address = str(channel)
+                channel_id = address_channel_map[channel_address]
+                hardware_channels[channel_id] = channel
+        self.channels_dict = hardware_channels

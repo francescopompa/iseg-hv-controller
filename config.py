@@ -1,9 +1,10 @@
 import logging
-from pydantic import BaseModel, validator, Field
-from ipaddress import IPv4Address
-from typing import Optional
-from collections import Counter
 import re
+from collections import Counter
+from ipaddress import IPv4Address
+from typing import Optional, List
+
+from pydantic import BaseModel, validator, Field
 
 try:
     import tomllib
@@ -11,54 +12,42 @@ except ModuleNotFoundError:
     import tomli as tomllib
 
 
-def create_pydantic_validation_class():
-    """
-    pydantic classes can only be created once if not configured else way.
-    just use ProgramConfig.validation_cls
-    :return:
-    """
-    class ChannelConfigSection(BaseModel):
-        addr: str
-        voltage: Optional[float] = None
-        ramp_speed: Optional[float] = None
-        trip_current: Optional[float] = None
-        power_status: Optional[bool] = False
+class ChannelConfigSection(BaseModel):
+    ch: int
+    addr: str
+    voltage: Optional[float] = None
+    ramp_speed: Optional[float] = None
+    trip_current: Optional[float] = None
+    power_status: Optional[bool] = False
 
-        @validator("addr")
-        def addr_crate_module_channel_checker(cls, v):
-            if re.match(r"\d{1,2}\.\d{1,2}\.\d{1,2}", v) is None:
-                raise ValueError(
-                    "not a correct iseg address \n"
-                    '(must be like [crate_number].[module_number].[channel_number] eg. "0.1.2")'
-                )
-            return v
+    @validator("addr")
+    def addr_crate_module_channel_checker(cls, v):
+        if re.match(r"\d{1,2}\.\d{1,2}\.\d{1,2}", v) is None:
+            raise ValueError(
+                "not a correct iseg address \n"
+                '(must be like [crate_number].[module_number].[channel_number] eg. "0.1.2")'
+            )
+        return v
 
-    class DefaultsConfigSection(BaseModel):
-        voltage: float
-        ramp_speed: float
-        trip_current: float
 
-    class ServerConfigSection(BaseModel):
-        ip: IPv4Address
-        port: int
-        username: str
-        password: str
+class DefaultsConfigSection(BaseModel):
+    voltage: Optional[float] = None
+    ramp_speed: Optional[float] = None
+    trip_current: Optional[float] = None
+    power_status: Optional[bool] = False
 
-    class ConfigValidatorModel(BaseModel):
-        Server: ServerConfigSection
-        Defaults: DefaultsConfigSection
 
-    # dynamicly create entry for the 40 channel entries
-    cls_annotations = {f"ch{i}": ChannelConfigSection for i in range(1, 40 + 1)}
-    class_appendages = {
-        "ch" + str(i): Field(ChannelConfigSection) for i in range(1, 40 + 1)
-    }
-    class_appendages.update({"__annotations__": cls_annotations})
-    validation_cls = type(
-        "ConfigValidationClass", (ConfigValidatorModel,), class_appendages
-    )
+class ServerConfigSection(BaseModel):
+    ip: IPv4Address
+    port: int
+    username: str
+    password: str
 
-    return validation_cls
+
+class ConfigValidatorModel(BaseModel):
+    Server: ServerConfigSection
+    Defaults: DefaultsConfigSection
+    Channels: List[ChannelConfigSection]
 
 
 class ProgramConfig:
@@ -66,8 +55,10 @@ class ProgramConfig:
     validation class is dynamically created to reflect the 40 ch. else they'd have to be hardcoded
     might have been cleaner that way
     """
-    validation_cls = create_pydantic_validation_class()
-    config: validation_cls
+
+    server: ServerConfigSection
+    defaults: DefaultsConfigSection
+    channels: List[ChannelConfigSection]
 
     def __init__(self, file="parameter_config.toml"):
         self.file = file
@@ -78,14 +69,15 @@ class ProgramConfig:
         with open(self.file, "rb") as f:
             try:
                 data = tomllib.load(f)
-                self.config = self.validation_cls(**data)
+                validated_config = ConfigValidatorModel(**data)
+                self.server = validated_config.Server
+                self.defaults = validated_config.Defaults
+                self.channels = validated_config.Channels
             except tomllib.TOMLDecodeError as e:
                 logging.exception("Couldn't parse/load toml parameter config")
 
     def control_uniqueness_addresses(self):
-        d = self.config.dict()
-        channels = [d[f"ch{i}"] for i in range(1, 40 + 1)]
-        channel_addresses = [ch['addr'] for ch in channels]
+        channel_addresses = [c.addr for c in self.channels]
         counted = Counter(channel_addresses)
         for elem in counted:
             if counted[elem] > 1:
@@ -99,6 +91,9 @@ class ProgramConfig:
         """
         ...
 
+
 if __name__ == "__main__":
     c = ProgramConfig()
-    print(c.config)
+    print(c.server)
+    print(c.defaults)
+    print(c.channels)

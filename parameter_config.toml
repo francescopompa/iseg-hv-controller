@@ -11,124 +11,165 @@ trip_current = 0.0001 # Ampere?
 # see that its 350 microA
 #what else ?
 
-[ch1]
+# [[Channels]] is a list of channel objects this makes it so much easier to handle
+[[Channels]]
+ch =  1
 addr = "0.0.0"
 voltage = 1000
 
 
-[ch2]
+[[Channels]]
+ch =  2
 addr = "0.0.1"
 
-[ch3]
+[[Channels]]
+ch =  3
 addr = "0.0.2"
 
-[ch4]
+[[Channels]]
+ch =  4
 addr = "0.0.3"
 
-[ch5]
+[[Channels]]
+ch =  5
 addr = "0.0.4"
 
-[ch6]
+[[Channels]]
+ch =  6
 addr = "0.0.5"
 
-[ch7]
+[[Channels]]
+ch =  7
 addr = "0.0.6"
 
-[ch8]
+[[Channels]]
+ch =  8
 addr = "0.0.7"
 
-[ch9]
+[[Channels]]
+ch =  9
 addr = "0.0.8"
 
-[ch10]
+[[Channels]]
+ch =  10
 addr = "0.0.9"
 
-[ch11]
+[[Channels]]
+ch =  11
 addr = "0.0.10"
 
-[ch12]
+[[Channels]]
+ch =  12
 addr = "0.0.11"
 
-[ch13]
+[[Channels]]
+ch =  13
 addr = "0.0.12"
 
-[ch14]
+[[Channels]]
+ch =  14
 addr = "0.0.13"
 
-[ch15]
+[[Channels]]
+ch =  15
 addr = "0.0.14"
 
-[ch16]
+[[Channels]]
+ch =  16
 addr = "0.0.15"
 
-[ch17]
+[[Channels]]
+ch =  17
 addr = "0.1.0"
 
-[ch18]
+[[Channels]]
+ch =  18
 addr = "0.1.1"
 
-[ch19]
+[[Channels]]
+ch =  19
 addr = "0.1.2"
 
-[ch20]
+[[Channels]]
+ch =  20
 addr = "0.1.3"
 
-[ch21]
+[[Channels]]
+ch =  21
 addr = "0.1.4"
 
-[ch22]
+[[Channels]]
+ch =  22
 addr = "0.1.5"
 
-[ch23]
+[[Channels]]
+ch =  23
 addr = "0.1.6"
 
-[ch24]
+[[Channels]]
+ch =  24
 addr = "0.1.7"
 
-[ch25]
+[[Channels]]
+ch =  25
 addr = "0.1.8"
 
-[ch26]
+[[Channels]]
+ch =  26
 addr = "0.1.9"
 
-[ch27]
+[[Channels]]
+ch =  27
 addr = "0.1.10"
 
-[ch28]
+[[Channels]]
+ch =  28
 addr = "0.1.11"
 
-[ch29]
+[[Channels]]
+ch =  29
 addr = "0.1.12"
 
-[ch30]
+[[Channels]]
+ch =  30
 addr = "0.1.13"
 
-[ch31]
+[[Channels]]
+ch =  31
 addr = "0.1.14"
 
-[ch32]
+[[Channels]]
+ch =  32
 addr = "0.1.15"
 
-[ch33]
+[[Channels]]
+ch =  33
 addr = "0.2.0"
 
-[ch34]
+[[Channels]]
+ch =  34
 addr = "0.2.1"
 
-[ch35]
+[[Channels]]
+ch =  35
 addr = "0.2.2"
 
-[ch36]
+[[Channels]]
+ch =  36
 addr = "0.2.3"
 
-[ch37]
+[[Channels]]
+ch =  37
 addr = "0.2.4"
 
-[ch38]
+[[Channels]]
+ch =  38
 addr = "0.2.5"
 
-[ch39]
+[[Channels]]
+ch =  39
 addr = "0.2.6"
 
-[ch40]
+[[Channels]]
+ch =  40
 addr = "0.2.7"

@@ -3,11 +3,11 @@ SEE README.md
 """
 import logging
 import time
-import json
-import difflib
-import ICS_Client
-from config import ProgramConfig
+
 from ICS_Info import print_some_info
+from config import ProgramConfig
+from client import IcsClient
+from commander import Commander
 
 
 def main():
@@ -23,19 +23,17 @@ def main():
 
     config = ProgramConfig()
 
-    ics_bridge = ICS_Client.IcsClient(
+    ics_client = IcsClient(
         connection_name="ics_connection" + time.asctime(),
         connection_parameters=f"ws://{config.config.Server.ip}:{config.config.Server.port}",
         connection_login=config.config.Server.username,
         connection_password=config.config.Server.password,
     )
 
-    ics_bridge.connect()
-    print_some_info(ics_bridge)
-    # test_channel = all_channels[0]
-    # test_channel.setControlCurrentSet(1)
-    # test_channel.setControlVoltageSet(200)
-    # test_channel.setControlOn(1)
+    ics_client.connect()
+    print_some_info(ics_client)
+    commander = Commander(ics_client, config)
+    commander.modify_channel("0.0.0")
 
 
 if __name__ == "__main__":
