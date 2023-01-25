@@ -48,8 +48,7 @@ class IcsClient:
         """
         connects to the actual crate with the param of this class
         """
-        self.connection = ICS_Helper.establish_connection(
-            self.ics_api,
+        self.connection = self.__establish_connection(
             self.connection_name,
             self.connection_parameters,
             self.connection_login,
@@ -78,7 +77,6 @@ class IcsClient:
         }
         power_frame = json.dumps(power_frame)  # Convert to json string
         self.connection.rawCommand(power_frame)
-        print(power_frame)
 
         # Check the result of the previous power on command
         result_cmd = {
@@ -99,6 +97,61 @@ class IcsClient:
         }
         result_cmd = json.dumps(result_cmd)
         result = self.connection.rawCommand(result_cmd)
-        print(result)
+        logging.log(result)
 
         time.sleep(5)
+
+    def __wait_for_connection(self, connection_name, connection_ip):
+        """
+        demo code from iseg not that pretty
+        Waits for a connection to be established and returns the connections object
+        Can block the application for quite a while
+        TODO: async?
+        """
+        # this might take a while.
+        logging.info("Waiting for connection to be created ...")
+        counter = 0
+        connection = self.ics_api.findConnection(connection_name)
+        while counter < 10 and not isinstance(connection, self.ics_api.connection):
+            time.sleep(1)
+            connection = self.ics_api.findConnection(connection_name)
+            counter = counter + 1
+
+        if not isinstance(connection, self.ics_api.connection):
+            # list is empty
+            logging.error('The connection "%s" couldn\'t be created.', connection_name)
+            return 0
+
+        # this might take a while.
+        logging.info("Waiting for connection to %s to be ready ...", connection_ip)
+        counter = 0
+        status = connection.getStatusConnectionStatus()
+        while counter < 10 and (status != "Configured" and status != "Connected"):
+            time.sleep(1)
+            new_status = connection.getStatusConnectionStatus()
+            counter = counter + 1
+            if new_status != status:
+                status = new_status
+                logging.info("%s sec : connection status == %s", counter, status)
+
+        if status != "Configured" and status != "Connected":
+            # list is empty
+            logging.error("Connection to %s couldn't be established.", connection_ip)
+            return 0
+
+        logging.info('Connected to "%s"', connection)
+        return connection
+
+    def __establish_connection(
+        self, connection_name, connection_ip, connection_login, connection_password
+    ):
+        """
+        Establishes a connection waits for it and returns a connection object
+        """
+        error_msg = self.ics_api.connect(
+            connection_name, connection_ip, connection_login, connection_password
+        )
+        if error_msg == "error":
+            logging.warning('The connection "%s" already exists', connection_name)
+
+        return self.__wait_for_connection(connection_name, connection_ip)

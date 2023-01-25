@@ -12,11 +12,17 @@ except ModuleNotFoundError:
 
 
 def create_pydantic_validation_class():
+    """
+    pydantic classes can only be created once if not configured else way.
+    just use ProgramConfig.validation_cls
+    :return:
+    """
     class ChannelConfigSection(BaseModel):
         addr: str
         voltage: Optional[float] = None
         ramp_speed: Optional[float] = None
         trip_current: Optional[float] = None
+        power_status: Optional[bool] = False
 
         @validator("addr")
         def addr_crate_module_channel_checker(cls, v):
@@ -56,8 +62,10 @@ def create_pydantic_validation_class():
 
 
 class ProgramConfig:
-    # validation class is dynamically created to reflect the 40 ch. else they'd have to be hardcoded
-    # might have been cleaner that way
+    """
+    validation class is dynamically created to reflect the 40 ch. else they'd have to be hardcoded
+    might have been cleaner that way
+    """
     validation_cls = create_pydantic_validation_class()
     config: validation_cls
 
@@ -87,6 +95,7 @@ class ProgramConfig:
     def apply_config(self, ics_client):
         """
         apply the whole config
+        # use interpreter between them?
         """
         ...
 

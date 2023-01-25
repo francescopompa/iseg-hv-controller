@@ -1,5 +1,6 @@
 """
 This file contains various helper function to help with the iCS software
+most importantly an import function for the api
 """
 import importlib
 import os
@@ -8,20 +9,6 @@ import time
 import sys
 import traceback
 import logging
-
-
-def check_is_linux_platform():
-    """
-    checks for Linux platform
-    """
-    return platform.system() == "Linux"
-
-
-def check_is_win_platform():
-    """
-    checks for windows platform
-    """
-    return platform.system() == "Windows"
 
 
 def import_from_path(rel_module_path, module_name):
@@ -40,12 +27,12 @@ def import_from_path(rel_module_path, module_name):
     # rel_module_path defines the location of the python module relative to
     # this file
     if rel_module_path == "":
-        if check_is_win_platform():
+        if platform.system() == "Windows":
             rel_module_path = os.path.dirname(script_path)
             rel_module_path = os.path.join(
                 rel_module_path, "icsPythonForWindows", "bin"
             )
-        elif check_is_linux_platform():
+        elif platform.system() == "Linux":
             rel_module_path = os.path.dirname(script_path)
             rel_module_path = os.path.join(
                 rel_module_path, "icsPythonForLinux", "platform", "linux", "64"
@@ -60,7 +47,7 @@ def import_from_path(rel_module_path, module_name):
 
     # try to import the module
     try:
-        ics_client = importlib.import_module(module_name)
+        ics_api = importlib.import_module(module_name)
 
     except ImportError:
 
@@ -75,7 +62,7 @@ def import_from_path(rel_module_path, module_name):
             rel_module_path,
         )
         full_path = os.path.join(rel_module_path, module_name)
-        if check_is_linux_platform():
+        if platform.system() == "Linux":
             full_path = full_path + ".so"
         if not os.path.exists(full_path):
             logging.warning(
@@ -85,7 +72,7 @@ def import_from_path(rel_module_path, module_name):
         logging.warning(
             "The Python modules links to shared Qt libraries\n\t\t  => make sure the Qt libraries are found"
         )
-        if check_is_linux_platform():
+        if platform.system() == "Linux":
             error_msg = "   => make sure the LD_LIBRARY_PATH environment variable is set properly."
             try:
                 path = os.environ["LD_LIBRARY_PATH"]
@@ -99,63 +86,7 @@ def import_from_path(rel_module_path, module_name):
     logging.info(
         "Sucessfully imported module %s(version %s) from path %s",
         module_name,
-        str(ics_client.getVersion()),
+        str(ics_api.getVersion()),
         rel_module_path,
     )
-    return ics_client
-
-
-def establish_connection(
-    ics_api, connection_name, connection_ip, connection_login, connection_password
-):
-    """
-    Establishes a connection waits for it and returns a connection object
-    """
-    error_msg = ics_api.connect(
-        connection_name, connection_ip, connection_login, connection_password
-    )
-    if error_msg == "error":
-        logging.warning('The connection "%s" already exists', connection_name)
-
-    return wait_for_connection(ics_api, connection_name, connection_ip)
-
-
-def wait_for_connection(ics_api, connection_name, connection_ip):
-    """
-    Waits for a connection to be established and returns the connections object
-    Can block the application for quite a while
-    TODO: async?
-    """
-    # this might take a while.
-    logging.info("Waiting for connection to be created ...")
-    counter = 0
-    connection = ics_api.findConnection(connection_name)
-    while counter < 10 and not isinstance(connection, ics_api.connection):
-        time.sleep(1)
-        connection = ics_api.findConnection(connection_name)
-        counter = counter + 1
-
-    if not isinstance(connection, ics_api.connection):
-        # list is empty
-        logging.error('The connection "%s" couldn\'t be created.', connection_name)
-        return 0
-
-    # this might take a while.
-    logging.info("Waiting for connection to %s to be ready ...", connection_ip)
-    counter = 0
-    status = connection.getStatusConnectionStatus()
-    while counter < 10 and (status != "Configured" and status != "Connected"):
-        time.sleep(1)
-        new_status = connection.getStatusConnectionStatus()
-        counter = counter + 1
-        if new_status != status:
-            status = new_status
-            logging.info("%s sec : connection status == %s", counter, status)
-
-    if status != "Configured" and status != "Connected":
-        # list is empty
-        logging.error("Connection to %s couldn't be established.", connection_ip)
-        return 0
-
-    logging.info('Connected to "%s"', connection)
-    return connection
+    return ics_api
