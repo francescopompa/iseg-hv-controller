@@ -13,9 +13,13 @@ except ModuleNotFoundError:
 
 
 class ChannelConfigSection(BaseModel):
+    """
+    pydantic validator class for the channel section of config toml file
+    """
+
     addr: str
     voltage: Optional[float] = None
-    ramp_speed: Optional[float] = None
+    # ramp_speed: Optional[float] = None # TODO rampspeed can only be set per module
     trip_current: Optional[float] = None
     power_status: Optional[bool] = False
 
@@ -30,6 +34,10 @@ class ChannelConfigSection(BaseModel):
 
 
 class DefaultsConfigSection(BaseModel):
+    """
+    pydantic validator class for the default setting for all channels of config toml file
+    """
+
     voltage: Optional[float] = None
     ramp_speed: Optional[float] = None
     trip_current: Optional[float] = None
@@ -44,6 +52,10 @@ class ServerConfigSection(BaseModel):
 
 
 class ConfigValidatorModel(BaseModel):
+    """
+    pydantic validator class that fully describes the config toml file
+    """
+
     Server: ServerConfigSection
     Defaults: DefaultsConfigSection
     Channels: Dict[int, ChannelConfigSection]
@@ -51,8 +63,9 @@ class ConfigValidatorModel(BaseModel):
 
 class ProgramConfig:
     """
-    validation class is dynamically created to reflect the 40 ch. else they'd have to be hardcoded
-    might have been cleaner that way
+    this class provides the config most of the values are validated.
+    TODO add validation for the values? might not be needed as ics ignores invalid settings.
+    TODO if voltage, etc... should have a limited range this can be done in the pydantic classes
     """
 
     server: ServerConfigSection

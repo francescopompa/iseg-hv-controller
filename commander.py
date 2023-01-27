@@ -39,8 +39,10 @@ class Commander:
 
     def _load_channel_map_(self):
         """
-        TODO doc
-        :return:
+        This function is called from init and applies the mapping of
+        the channel address and channel id to the isc_client class.
+        there a channel dict ist constructed
+        TODO is there a better way todo this?
         """
         addr_to_id_map = {c.addr: ch_id for ch_id, c in self.config.channels.items()}
         self.isc_client.load_channels(addr_to_id_map)
@@ -66,8 +68,7 @@ class Commander:
 
     def apply_channels_config(self):
         """
-        TODO ADD RESPONSE AND CHECK IF CHANGEG
-        :return:
+        TODO ADD RESPONSE AND CHECK IF CHANGE successful
         """
         for ch_id in self.isc_client.channels_dict.keys():
             config_channel = self.config.channels[ch_id]
@@ -85,16 +86,21 @@ class Commander:
         trip_current=None,
         power_status=None,
     ):
+        """
+        takes the channel id and sets the values to either the supplied or the defaults.
+        if both are None doesn't send the command
+        """
         channel = self.isc_client.channels_dict[channel_id]
+        default_channel_config = self.config.defaults
 
         if not voltage:
-            voltage = self.config.defaults.voltage
+            voltage = default_channel_config.voltage
         if not ramp_speed:
-            ramp_speed = self.config.defaults.ramp_speed
+            ramp_speed = default_channel_config.ramp_speed
         if not trip_current:
-            trip_current = self.config.defaults.trip_current
+            trip_current = default_channel_config.trip_current
         if power_status is None:
-            power_status = self.config.defaults.power_status
+            power_status = default_channel_config.power_status
 
         if voltage:
             channel.setControlVoltageSet(voltage)
@@ -107,7 +113,11 @@ class Commander:
             channel.setControlOn(power_status)
 
     def realtime_load_config(self, filename):
+        """
+        this method loads a config from file and returns the config object
+        so it can be overwritten in mainloop. TODO also has to be set here
+        """
         pass
-        # TODO
+        # TODO reload config
         config = None
         return config

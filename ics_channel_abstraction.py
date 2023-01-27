@@ -1,6 +1,7 @@
 class ICSChannelAbstraction:
     """
     class to make the members of the ics_api.channel visible
+    TODO currently only used as type hinting class make its so ics_client uses this?
     """
 
     def __init__(self, channel_object):

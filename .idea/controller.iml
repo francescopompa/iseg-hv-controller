@@ -63,6 +63,9 @@
       <excludeFolder url="file://$MODULE_DIR$/icsPythonForWindows/bin/python-3.7.1/lib/wsgiref" />
       <excludeFolder url="file://$MODULE_DIR$/icsPythonForWindows/bin/python-3.7.1/lib/xml" />
       <excludeFolder url="file://$MODULE_DIR$/icsPythonForWindows/bin/python-3.7.1/lib/xmlrpc" />
+      <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/icsPythonForLinux" />
+      <excludeFolder url="file://$MODULE_DIR$/icsPythonForWindows" />
     </content>
     <orderEntry type="jdk" jdkName="Poetry (controller) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

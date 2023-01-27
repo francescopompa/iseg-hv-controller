@@ -15,8 +15,8 @@ def import_from_path(rel_module_path, module_name=""):
     this function imports the icsClient Python module
     the path and module name are defined here if they aren't given above
     :param rel_module_path: path to the ics lib relative to this file
-    :param module_name:  module named can usually be left empty
-    :return: the ics module
+    :param module_name:  module name can usually be left empty
+    :return: the ics api module
     """
     # get dir of THIS file
     # cwd is not defined to be file dir

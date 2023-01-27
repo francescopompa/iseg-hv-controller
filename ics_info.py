@@ -1,11 +1,14 @@
 import logging
 import time
+from isc_client import IcsClient
 
 
-def print_channel_info(channel):
-    # TODO move alle these infos into other method
-    print(channel.module)
-    print(channel)
+def print_all_channel_infos(ics_client: IcsClient):
+    for ch_id, channel in ics_client.channels_dict.items():
+        print_channel_info(ch_id, channel)
+
+
+def print_channel_info(ch_id, channel):
     status_v_nominal = channel.getStatusVoltageNominal()
     control_v_set = channel.getControlVoltageSet()
     status_v_measure = channel.getStatusVoltageMeasure()
@@ -19,27 +22,28 @@ def print_channel_info(channel):
     status_emergency = channel.getStatusEmergency()
     setup_delayed_trip_action = channel.getSetupDelayedTripAction()
     setup_delayed_trip_time = channel.getSetupDelayedTripTime()
-    time.sleep(0.5)
-    print(
+    time.sleep(0.1)
+    logging.info(
         f"""
-        status_v_nominal {status_v_nominal}
-        control_v_set {control_v_set}
-        status_v_measure {status_v_measure}
-        status_c_nominal {status_c_nominal}
-        control_c_set {control_c_set}
-        status_c_measure {status_c_measure}
-        status_v_limit_exceed {status_v_limit_exceed}
-        status_c_limit_exceed {status_c_limit_exceed}
-        status_current_trip  {status_current_trip}
-        status_on  {status_on}
-        status_emergency  {status_emergency}
-        setup_delayed_trip_action  {setup_delayed_trip_action}
-        setup_delayed_trip_time  {setup_delayed_trip_time}
+        channel_id: {ch_id}
+        status_on:  {status_on}
+        control_v_set: {control_v_set}
+        status_v_measure: {status_v_measure}
+        status_v_nominal: {status_v_nominal}
+        control_c_set: {control_c_set}
+        status_c_measure: {status_c_measure}
+        status_c_nominal: {status_c_nominal}
+        status_v_limit_exceed: {status_v_limit_exceed}
+        status_c_limit_exceed: {status_c_limit_exceed}
+        status_current_trip:  {status_current_trip}
+        status_emergency:  {status_emergency}
+        setup_delayed_trip_action:  {setup_delayed_trip_action}
+        setup_delayed_trip_time:  {setup_delayed_trip_time}
         """
     )
 
 
-def print_some_info(ics_client):
+def print_basic_info(ics_client: IcsClient):
     # Important to wait here so the crate gets booted up or whatever
     other_crate_cmd = ics_client.connection.crates
     print(f"Other crate cmd: {other_crate_cmd}")
@@ -60,7 +64,7 @@ def print_some_info(ics_client):
     logging.info(f"All channels {all_channels}.")
 
     # time to fill the cache from iCSservice
-    time.sleep(1)
+    time.sleep(0.2)
 
     for mod in all_modules:
         logging.info(
@@ -72,5 +76,5 @@ def print_some_info(ics_client):
                      """
         )
 
-    for channel in all_channels:
-        print_channel_info(ics_client, channel)
+    # for channel in all_channels:
+    # print_channel_info(channel)
