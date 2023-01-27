@@ -7,7 +7,7 @@ def print_channel_info(ics_client, channel):
     print(channel.module)
     print(channel)
     status_v_nominal = channel.getStatusVoltageNominal()
-    control_v_set = channel.getControlVoltageSet
+    control_v_set = channel.getControlVoltageSet()
     status_v_measure = channel.getStatusVoltageMeasure()
     status_c_nominal = channel.getStatusCurrentNominal()
     control_c_set = channel.getControlCurrentSet()
@@ -19,6 +19,7 @@ def print_channel_info(ics_client, channel):
     status_emergency = channel.getStatusEmergency()
     setup_delayed_trip_action = channel.getSetupDelayedTripAction()
     setup_delayed_trip_time = channel.getSetupDelayedTripTime()
+    time.sleep(0.5)
     print(
         f"""
         status_v_nominal {status_v_nominal}
@@ -38,18 +39,18 @@ def print_channel_info(ics_client, channel):
     )
 
 
-def print_some_info(ics_bridge):
+def print_some_info(ics_client):
     # Important to wait here so the crate gets booted up or whatever
-    other_crate_cmd = ics_bridge.connection.crates
+    other_crate_cmd = ics_client.connection.crates
     print(f"Other crate cmd: {other_crate_cmd}")
 
-    all_crates = ics_bridge.connection.getCrates()
+    all_crates = ics_client.connection.getCrates()
     print(f"All crates {all_crates}.")
 
     # or_this = all_crates[0].crates
     # print(f"or this?: {or_this}")
 
-    all_modules = ics_bridge.connection.getModules()
+    all_modules = ics_client.connection.getModules()
     logging.info(f"All modules {all_modules}.")
 
     all_channels = []
@@ -59,7 +60,7 @@ def print_some_info(ics_bridge):
     logging.info(f"All channels {all_channels}.")
 
     # time to fill the cache from iCSservice
-    time.sleep(5)
+    time.sleep(1)
 
     for mod in all_modules:
         logging.info(
@@ -72,4 +73,4 @@ def print_some_info(ics_bridge):
         )
 
     for channel in all_channels:
-        print_channel_info(channel)
+        print_channel_info(ics_client, channel)

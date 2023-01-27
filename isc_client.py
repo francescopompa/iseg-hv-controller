@@ -6,8 +6,9 @@ import logging
 import sys
 import time
 from typing import Optional, Dict
-import ICS_Helper
-from config import ProgramConfig
+import ics_helper
+from configurator import ProgramConfig
+from ics_channel_abstraction import ICSChannelAbstraction
 
 
 class IcsClient:
@@ -16,7 +17,7 @@ class IcsClient:
     The isc library needs to be correctly setup see ics_helper.py for more
     """
 
-    channels_dict: Optional[Dict[int, object]] = {}
+    channels_dict: Dict[int, ICSChannelAbstraction] = {}
 
     def __init__(
         self,
@@ -26,14 +27,13 @@ class IcsClient:
         connection_password="demo",
     ):
         # import icsClient module
-        self.ics_api = ICS_Helper.import_from_path("", "")
+        self.ics_api = ics_helper.import_from_path("", "")
 
         if not self.ics_api:
             logging.error("Failed to import icsClient module => Exit.")
             sys.exit(1)
 
         self.connection = None
-
         self.connection_name = connection_name
         self.connection_parameters = connection_parameters
         self.connection_login = connection_login
@@ -101,7 +101,7 @@ class IcsClient:
         }
         result_cmd = json.dumps(result_cmd)
         result = self.connection.rawCommand(result_cmd)
-        logging.log(result)
+        logging.info(result)
 
         time.sleep(5)
 
@@ -172,5 +172,5 @@ class IcsClient:
             for channel in mod.channels:
                 channel_address = str(channel)
                 channel_id = address_channel_map[channel_address]
-                hardware_channels[channel_id] = channel
+                hardware_channels[channel_id] = ICSChannelAbstraction(channel)
         self.channels_dict = hardware_channels

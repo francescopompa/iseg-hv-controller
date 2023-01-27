@@ -2,7 +2,7 @@ import logging
 import re
 from collections import Counter
 from ipaddress import IPv4Address
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from pydantic import BaseModel, validator, Field
 
@@ -13,7 +13,6 @@ except ModuleNotFoundError:
 
 
 class ChannelConfigSection(BaseModel):
-    ch: int
     addr: str
     voltage: Optional[float] = None
     ramp_speed: Optional[float] = None
@@ -47,7 +46,7 @@ class ServerConfigSection(BaseModel):
 class ConfigValidatorModel(BaseModel):
     Server: ServerConfigSection
     Defaults: DefaultsConfigSection
-    Channels: List[ChannelConfigSection]
+    Channels: Dict[int, ChannelConfigSection]
 
 
 class ProgramConfig:
@@ -58,7 +57,7 @@ class ProgramConfig:
 
     server: ServerConfigSection
     defaults: DefaultsConfigSection
-    channels: List[ChannelConfigSection]
+    channels: Dict[int, ChannelConfigSection]
 
     def __init__(self, file="parameter_config.toml"):
         self.file = file
@@ -77,7 +76,7 @@ class ProgramConfig:
                 logging.exception("Couldn't parse/load toml parameter config")
 
     def control_uniqueness_addresses(self):
-        channel_addresses = [c.addr for c in self.channels]
+        channel_addresses = [c.addr for c in self.channels.values()]
         counted = Counter(channel_addresses)
         for elem in counted:
             if counted[elem] > 1:
