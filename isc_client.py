@@ -14,7 +14,9 @@ from ics_channel_abstraction import ICSChannelAbstraction
 class IcsClient:
     """
     Object to talk with the isc of the iseg HV
-    The isc library needs to be correctly setup see ics_helper.py for more
+    The isc library needs to be correctly setup see ics_helper.py for more.
+    most manipulation will probably be via the channels_dict.
+    it takes ach_id and returns a channel object
     """
 
     channels_dict: Dict[int, ICSChannelAbstraction] = {}
@@ -103,14 +105,14 @@ class IcsClient:
         result = self.connection.rawCommand(result_cmd)
         logging.info(result)
 
-        time.sleep(5)
+        time.sleep(1)
 
     def __wait_for_connection(self, connection_name, connection_ip):
         """
         demo code from iseg not that pretty
         Waits for a connection to be established and returns the connections object
         Can block the application for quite a while
-        TODO: async?
+        TODO: async? probs not shouldn't touch this method at all as its working rn
         """
         # this might take a while.
         logging.info("Waiting for connection to be created ...")
@@ -162,8 +164,9 @@ class IcsClient:
 
     def load_channels(self, address_channel_map):
         """
+        TODO better way to do this? maybe extra channel mapping file idk seems more complicated
         has to be called with a valid mapping in  a config
-         currently from commander
+        currently from commander bc that class controlls both client and config
         """
         all_modules = self.connection.getModules()
 
