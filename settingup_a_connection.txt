@@ -24,7 +24,9 @@ there should be a line printed when the ics crate gets an ip address
 Once one knows the ip address of the crate one can just connect to it over any modern webbrowser
 and assign a static ip 
 
+# BETTER WAY:
+there is also the option to set the values of the ip configuration via usb stick and a text file called RESET_Net.txt
+consult the ics manual for detailed instructions.
 
-#wireshark
-#nmap
+other possibilities are to use wireshark and nmap
 
