@@ -59,7 +59,7 @@ class ProgramConfig:
     defaults: DefaultsConfigSection
     channels: Dict[int, ChannelConfigSection]
 
-    def __init__(self, file="parameter_config.toml"):
+    def __init__(self, file="parameter_config_v1.toml"):
         self.file = file
         self.load()
         self.control_uniqueness_addresses()
@@ -82,13 +82,6 @@ class ProgramConfig:
             if counted[elem] > 1:
                 logging.error(f"Address {elem} is not unique!!")
                 raise ValueError(f"Address {elem} is not unique!!")
-
-    def apply_config(self, ics_client):
-        """
-        apply the whole config
-        # use interpreter between them?
-        """
-        ...
 
 
 if __name__ == "__main__":

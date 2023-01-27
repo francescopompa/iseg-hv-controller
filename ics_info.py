@@ -2,7 +2,7 @@ import logging
 import time
 
 
-def print_channel_info(ics_client, channel):
+def print_channel_info(channel):
     # TODO move alle these infos into other method
     print(channel.module)
     print(channel)

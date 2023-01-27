@@ -38,26 +38,30 @@ class Commander:
             return False
 
     def _load_channel_map_(self):
+        """
+        TODO doc
+        :return:
+        """
         addr_to_id_map = {c.addr: ch_id for ch_id, c in self.config.channels.items()}
         self.isc_client.load_channels(addr_to_id_map)
 
     def reset_all_to_defaults(self):
         voltage = self.config.defaults.voltage
-        ramp_speed = self.config.defaults.voltage
-        trip_current = self.config.defaults.voltage
-        power_status = self.config.defaults.voltage
+        ramp_speed = self.config.defaults.ramp_speed
+        trip_current = self.config.defaults.trip_current
+        power_status = self.config.defaults.power_status
 
         for channel in self.isc_client.channels_dict.values():
             # zero voltage doesn't matter
             if voltage:
                 channel.setControlVoltageSet(voltage)
             if ramp_speed:
-                channel.setControlVoltageRampspeedup(ramp_speed)
+                channel.setControlVoltageRampspeedUp(ramp_speed)
             if trip_current:
                 channel.setControlCurrentSet(
                     trip_current
                 )  # not sure about this what units? maybe its also something else see web cmds
-            if power_status:
+            if power_status is not None:
                 channel.setControlOn(power_status)
 
     def apply_channels_config(self):
@@ -66,10 +70,11 @@ class Commander:
         :return:
         """
         for ch_id in self.isc_client.channels_dict.keys():
-            voltage = self.config.channels[ch_id].voltage
-            ramp_speed = self.config.channels[ch_id].ramp_speed
-            trip_current = self.config.channels[ch_id].trip_current
-            power_status = self.config.channels[ch_id].power_status
+            config_channel = self.config.channels[ch_id]
+            voltage = config_channel.voltage
+            ramp_speed = config_channel.ramp_speed
+            trip_current = config_channel.trip_current
+            power_status = config_channel.power_status
             self.modify_channel(ch_id, voltage, ramp_speed, trip_current, power_status)
 
     def modify_channel(
@@ -95,12 +100,13 @@ class Commander:
             channel.setControlVoltageSet(voltage)
         if ramp_speed:
             channel.setControlVoltageRampspeedUp(ramp_speed)
+            channel.setControlVoltageRampspeedDown(ramp_speed)
         if trip_current:
             channel.setControlCurrentSet(trip_current)
         if power_status is not None:
             channel.setControlOn(power_status)
 
-    def reload_config(self, filename):
+    def realtime_load_config(self, filename):
         pass
         # TODO
         config = None

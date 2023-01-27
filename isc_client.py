@@ -172,5 +172,5 @@ class IcsClient:
             for channel in mod.channels:
                 channel_address = str(channel)
                 channel_id = address_channel_map[channel_address]
-                hardware_channels[channel_id] = ICSChannelAbstraction(channel)
+                hardware_channels[channel_id] = channel
         self.channels_dict = hardware_channels

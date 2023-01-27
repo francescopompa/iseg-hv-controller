@@ -6,9 +6,10 @@ password = "password"
 
 [Defaults]
 voltage = 700 # Volt
-ramp_speed = 40 # V/s
+ramp_speed = 5 # V/s
+# Can only be change module wise
 trip_current = 350E-6 # Ampere?
-power_status = true
+power_status = true # nicht alle an?
 # see that its 350 microA
 #what else ?
 
@@ -21,9 +22,9 @@ power_status = true
 
 [Channels.2]
 addr = "0.0.1"
-ramp_speed = 50
+ramp_speed = 7
 trip_current = 100e-6
-power_status = true
+power_status = false
 
 [Channels.3]
 addr = "0.0.2"

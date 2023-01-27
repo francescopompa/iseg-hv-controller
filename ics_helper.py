@@ -10,7 +10,7 @@ import sys
 import traceback
 
 
-def import_from_path(rel_module_path, module_name):
+def import_from_path(rel_module_path, module_name=""):
     """
     this function imports the icsClient Python module
     the path and module name are defined here if they aren't given above
