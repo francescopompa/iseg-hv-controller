@@ -1,0 +1,30 @@
+Access to iseg CC24  and the ics service on it only via internet protocol.
+-> ethernet or wifi(over usb adapter)
+
+DHCP is enabled per default on the server meaning if the network/router configuration allows it an ip address will be assigned and can then be found via ICSfinder2 (or nmap and other networkscanner)
+
+If the server is connected directly to an the ethernet port of an computer, the computer must be configured to assign an ip address otherwise the server will take on an ip address in the range 169.254.*.* which is reserved for when no router could be found.
+
+
+To create a small dns server see:(only linux)
+https://unix.stackexchange.com/questions/295238/how-to-connect-to-device-via-ssh-over-direct-ethernet-connection
+
+dnsmasq can be used. find out the interfacename with 
+#ip addr 
+
+configure ur network manager to a static ip in the 192.168.*.1 range with netmask being 255.255.255.0 and gate being the same 192.168.*.1 addr.
+alternativly just use:
+#sudo ifconfig <interface> 192.168.*.1
+(the star in this paragraph is the same number 0-255)
+then on can start the dnsmasq service with:
+#sudo dnsmasq -d -C /dev/null --port=0 --domain=localdomain --interface=<interface> --dhcp-range=192.168.*.2,192.168.*.100,99h
+
+there should be a line printed when the ics crate gets an ip address
+
+Once one knows the ip address of the crate one can just connect to it over any modern webbrowser
+and assign a static ip 
+
+
+#wireshark
+#nmap
+
