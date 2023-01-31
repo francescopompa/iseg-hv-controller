@@ -5,10 +5,11 @@ import json
 import logging
 import sys
 import time
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 import ics_helper
 from configurator import ProgramConfig
-from ics_channel_abstraction import ICSChannelAbstraction
+from ics_channel_wrapper import ICSChannelAbstraction
+from ics_module_wrapper import ICSModuleAbstraction
 
 
 class IcsClient:
@@ -20,6 +21,7 @@ class IcsClient:
     """
 
     channels_dict: Dict[int, ICSChannelAbstraction] = {}
+    modules: List[ICSModuleAbstraction] = []
 
     def __init__(
         self,
@@ -162,7 +164,7 @@ class IcsClient:
 
         return self.__wait_for_connection(connection_name, connection_ip)
 
-    def load_channels(self, address_channel_map):
+    def load_channels_and_modules(self, address_channel_map):
         """
         TODO better way to do this? maybe extra channel mapping file idk seems more complicated
         has to be called with a valid mapping in  a config
@@ -171,9 +173,10 @@ class IcsClient:
         all_modules = self.connection.getModules()
 
         hardware_channels = {}
-        for mod in all_modules:
-            for channel in mod.channels:
+        for module in all_modules:
+            self.modules.append(ICSModuleAbstraction(module))
+            for channel in module.channels:
                 channel_address = str(channel)
                 channel_id = address_channel_map[channel_address]
-                hardware_channels[channel_id] = channel
+                hardware_channels[channel_id] = ICSChannelAbstraction(channel)
         self.channels_dict = hardware_channels

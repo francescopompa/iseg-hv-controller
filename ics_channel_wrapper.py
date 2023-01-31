@@ -2,84 +2,33 @@ class ICSChannelAbstraction:
     """
     class to make the members of the ics_api.channel visible
     TODO currently only used as type hinting class make its so ics_client uses this?
+    see stackoverflow discuccsion for more:
+    https://stackoverflow.com/questions/1443129/completely-wrap-an-object-in-python/31437314
+    there seem to be edge cases? with __getattr__and __slots__ . see link for thatS
     """
 
     def __init__(self, channel_object):
         self.__channel_object = channel_object
+        # self.__class__ = type(
+        #     channel_object.__class__.__name__,
+        #     (self.__class__, channel_object.__class__),
+        #     {},
+        # )
 
-        self.connection = self.__channel_object.connection
+        if hasattr(self.__channel_object, "__dict__"):
+            self.__dict__ = channel_object.__dict__
 
-        self.index = self.__channel_object.index
+        if hasattr(self.__channel_object, "connection"):
+            self.connection = self.__channel_object.connection
 
-        self.line = self.__channel_object.line
+        if hasattr(self.__channel_object, "index"):
+            self.index = self.__channel_object.index
 
-        self.module = self.__channel_object.module
+        if hasattr(self.__channel_object, "line"):
+            self.line = self.__channel_object.line
 
-    def __delattr__(self, *args):
-        return self.__channel_object.__delattr__(*args)
-
-    def __dir__(self, *args):
-        return self.__channel_object.__dir__(*args)
-
-    def __doc__(self, *args):
-        return self.__channel_object.__doc__(*args)
-
-    def __eq__(self, *args):
-        return self.__channel_object.__eq__(*args)
-
-    def __format__(self, *args):
-        return self.__channel_object.__format__(*args)
-
-    def __ge__(self, *args):
-        return self.__channel_object.__ge__(*args)
-
-    def __getattribute__(self, *args):
-        return self.__channel_object.__getattribute__(*args)
-
-    def __gt__(self, *args):
-        return self.__channel_object.__gt__(*args)
-
-    def __hash__(self, *args):
-        return self.__channel_object.__hash__(*args)
-
-    def __init_subclass__(self, *args):
-        return self.__channel_object.__init_subclass__(*args)
-
-    def __le__(self, *args):
-        return self.__channel_object.__le__(*args)
-
-    def __lt__(self, *args):
-        return self.__channel_object.__lt__(*args)
-
-    def __module__(self, *args):
-        return self.__channel_object.__module__(*args)
-
-    def __ne__(self, *args):
-        return self.__channel_object.__ne__(*args)
-
-    def __new__(self, *args):
-        return self.__channel_object.__new__(*args)
-
-    def __reduce__(self, *args):
-        return self.__channel_object.__reduce__(*args)
-
-    def __reduce_ex__(self, *args):
-        return self.__channel_object.__reduce_ex__(*args)
-
-    def __repr__(self, *args):
-        return self.__channel_object.__repr__(*args)
-
-    def __setattr__(self, *args):
-        return self.__channel_object.__setattr__(*args)
-
-    def __sizeof__(self, *args):
-        return self.__channel_object.__sizeof__(*args)
-
-    def __str__(self, *args):
-        return self.__channel_object.__str__(*args)
-
-    def __subclasshook__(self, *args):
-        return self.__channel_object.__subclasshook__(*args)
+        if hasattr(self.__channel_object, "module"):
+            self.module = self.__channel_object.module
 
     def getControlChannelEventMask(self, *args):
         return self.__channel_object.getControlChannelEventMask(*args)

@@ -1,6 +1,9 @@
 import logging
 import time
 from isc_client import IcsClient
+from ics_module_wrapper import ICSModuleAbstraction
+from ics_channel_wrapper import ICSChannelAbstraction
+import inspect
 
 
 def print_all_channel_infos(ics_client: IcsClient):
@@ -8,7 +11,23 @@ def print_all_channel_infos(ics_client: IcsClient):
         print_channel_info(ch_id, channel)
 
 
-def print_channel_info(ch_id, channel):
+def print_complete_channel_info(channel: ICSChannelAbstraction):
+    """
+    prints the values of all the getter methods of a channel
+    """
+    # get all methods of channel (they are builtin bc it's a c wrapping)
+    builtin_members = inspect.getmembers(channel, inspect.isbuiltin)
+
+    getters = [(name, func) for name, func in builtin_members if name.startswith("get")]
+
+    complete_string = ""
+    for name, func in getters:
+        value = func()
+        complete_string += f"{name[2:]}: \t {value}"
+    logging.info(complete_string)
+
+
+def print_channel_info(ch_id, channel: ICSChannelAbstraction):
     status_v_nominal = channel.getStatusVoltageNominal()
     control_v_set = channel.getControlVoltageSet()
     status_v_measure = channel.getStatusVoltageMeasure()
@@ -20,8 +39,6 @@ def print_channel_info(ch_id, channel):
     status_current_trip = channel.getStatusTrip()
     status_on = channel.getStatusOn()
     status_emergency = channel.getStatusEmergency()
-    setup_delayed_trip_action = channel.getSetupDelayedTripAction()
-    setup_delayed_trip_time = channel.getSetupDelayedTripTime()
     time.sleep(0.1)
     logging.info(
         f"""

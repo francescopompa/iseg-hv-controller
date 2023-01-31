@@ -45,20 +45,19 @@ class Commander:
         TODO is there a better way todo this?
         """
         addr_to_id_map = {c.addr: ch_id for ch_id, c in self.config.channels.items()}
-        self.isc_client.load_channels(addr_to_id_map)
+        self.isc_client.load_channels_and_modules(addr_to_id_map)
 
     def reset_all_to_defaults(self):
         voltage = self.config.defaults.voltage
         ramp_speed = self.config.defaults.ramp_speed
         trip_current = self.config.defaults.trip_current
         power_status = self.config.defaults.power_status
-
+        for module in self.isc_client.modules:
+            module.setControlVoltageRampspeed(ramp_speed)
         for channel in self.isc_client.channels_dict.values():
             # zero voltage doesn't matter
             if voltage:
                 channel.setControlVoltageSet(voltage)
-            if ramp_speed:
-                channel.setControlVoltageRampspeedUp(ramp_speed)
             if trip_current:
                 channel.setControlCurrentSet(
                     trip_current
@@ -73,16 +72,14 @@ class Commander:
         for ch_id in self.isc_client.channels_dict.keys():
             config_channel = self.config.channels[ch_id]
             voltage = config_channel.voltage
-            ramp_speed = config_channel.ramp_speed
             trip_current = config_channel.trip_current
             power_status = config_channel.power_status
-            self.modify_channel(ch_id, voltage, ramp_speed, trip_current, power_status)
+            self.modify_channel(ch_id, voltage, trip_current, power_status)
 
     def modify_channel(
         self,
         channel_id,
         voltage=None,
-        ramp_speed=None,
         trip_current=None,
         power_status=None,
     ):
@@ -95,8 +92,6 @@ class Commander:
 
         if not voltage:
             voltage = default_channel_config.voltage
-        if not ramp_speed:
-            ramp_speed = default_channel_config.ramp_speed
         if not trip_current:
             trip_current = default_channel_config.trip_current
         if power_status is None:
@@ -104,13 +99,14 @@ class Commander:
 
         if voltage:
             channel.setControlVoltageSet(voltage)
-        if ramp_speed:
-            channel.setControlVoltageRampspeedUp(ramp_speed)
-            channel.setControlVoltageRampspeedDown(ramp_speed)
         if trip_current:
             channel.setControlCurrentSet(trip_current)
         if power_status is not None:
             channel.setControlOn(power_status)
+
+    def set_ramp_speed(self, ramp_speed):
+        for mod in self.isc_client.modules:
+            mod.setControlCurrentRampspeed(ramp_speed)
 
     def realtime_load_config(self, filename):
         """
