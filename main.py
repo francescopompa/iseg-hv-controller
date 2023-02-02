@@ -8,6 +8,7 @@ from ics_info import print_basic_info
 from configurator import ProgramConfig
 from isc_client import IcsClient
 from commander import Commander
+from interpreter import Interpreter
 import argparse
 
 
@@ -46,8 +47,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-i",
         "--interactive",
-        help="starts the interactive mode"
-        "for help type help or see the interpreter class",
+        help="starts the interactive mode" "for help type help or see the interpreter class",
         action="store_true",
     )
     logging.basicConfig(
@@ -72,5 +72,7 @@ if __name__ == "__main__":
 
     commander = Commander(ics_client, config)
 
-    # commander.modify_channel("0.0.0")
+    commander.modify_channel("0.0.0")
     commander.apply_channels_config()
+    interpreter = Interpreter()
+    interpreter.cmdloop()
