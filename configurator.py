@@ -19,7 +19,6 @@ class ChannelConfigSection(BaseModel):
 
     addr: str
     voltage: Optional[float] = None
-    # ramp_speed: Optional[float] = None # TODO rampspeed can only be set per module
     trip_current: Optional[float] = None
     power_status: Optional[bool] = False
 

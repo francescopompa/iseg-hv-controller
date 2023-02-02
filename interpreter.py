@@ -134,7 +134,7 @@ class Interpreter(cmd.Cmd):
             percentage_v_nom_per_sec = absolute_v_per_sec / v_nom * 100
             print(
                 f"Warning! input: {number} too large! \n"
-                f"interpreting it as absolute Volt/s and converting it"
+                f"interpreting it as absolute Volt/s and converting it "
                 f"to {percentage_v_nom_per_sec} %V_nom/s"
             )
         else:

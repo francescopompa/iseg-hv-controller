@@ -5,6 +5,8 @@ from ics_module_wrapper import ICSModuleAbstraction
 from ics_channel_wrapper import ICSChannelAbstraction
 import inspect
 
+# TODO CONVERT THIS INTO strings or dicts that can be used by interpreter
+
 
 def print_all_channel_infos(ics_client: IcsClient):
     for ch_id, channel in ics_client.channels_dict.items():
@@ -54,8 +56,6 @@ def print_channel_info(ch_id, channel: ICSChannelAbstraction):
         status_c_limit_exceed: {status_c_limit_exceed}
         status_current_trip:  {status_current_trip}
         status_emergency:  {status_emergency}
-        setup_delayed_trip_action:  {setup_delayed_trip_action}
-        setup_delayed_trip_time:  {setup_delayed_trip_time}
         """
     )
 

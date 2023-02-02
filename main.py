@@ -24,6 +24,7 @@ if __name__ == "__main__":
     """
     main()
 
+    # TODO implement and test parser logic
     parser = argparse.ArgumentParser(
         prog="iseg HV Controller",
         description="CLI to apply configs and commands to the iseg High Voltage Crate",
@@ -34,7 +35,7 @@ if __name__ == "__main__":
         "--filename",
         help="The file name to the toml config."
         "See the default config for options or look at the configurator class",
-        default="parameter_config_v1.toml",  # TODO rename
+        default="default_config.toml",  # TODO rename
     )
     parser.add_argument(
         "-c",
@@ -71,8 +72,7 @@ if __name__ == "__main__":
     print_basic_info(ics_client)
 
     commander = Commander(ics_client, config)
-
-    commander.modify_channel("0.0.0")
     commander.apply_channels_config()
+
     interpreter = Interpreter()
     interpreter.cmdloop()

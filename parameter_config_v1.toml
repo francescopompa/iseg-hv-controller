@@ -6,7 +6,7 @@ password = "password"
 
 [Defaults]
 voltage = 700 # Volt
-ramp_speed = 5 # % Volt nominal per sec
+ramp_speed = 1 # % Volt nominal per sec == 20V/s
 # Can only be change module wise
 trip_current = 350E-6 # Ampere
 power_status = true # nicht alle an?

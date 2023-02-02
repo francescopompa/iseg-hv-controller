@@ -2,6 +2,7 @@ class ICSChannelAbstraction:
     """
     class to make the members of the ics_api.channel visible
     TODO currently only used as type hinting class make its so ics_client uses this?
+    TODO TEST THIS in the LAB!!
     see stackoverflow discuccsion for more:
     https://stackoverflow.com/questions/1443129/completely-wrap-an-object-in-python/31437314
     there seem to be edge cases? with __getattr__and __slots__ . see link for thatS
@@ -352,9 +353,7 @@ class ICSChannelAbstraction:
         return self.__channel_object.setControlVoltageRampspeedDown(*args)
 
     def setControlVoltageRampspeedUp(self, ramp_speed_in_volts_per_sec):
-        return self.__channel_object.setControlVoltageRampspeedUp(
-            ramp_speed_in_volts_per_sec
-        )
+        return self.__channel_object.setControlVoltageRampspeedUp(ramp_speed_in_volts_per_sec)
 
     def setControlVoltageSet(self, voltage_in_volt):
         return self.__channel_object.setControlVoltageSet(voltage_in_volt)

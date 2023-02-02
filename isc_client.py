@@ -114,7 +114,7 @@ class IcsClient:
         demo code from iseg not that pretty
         Waits for a connection to be established and returns the connections object
         Can block the application for quite a while
-        TODO: async? probs not shouldn't touch this method at all as its working rn
+        DONT touch this as its not my code and currently working fine!
         """
         # this might take a while.
         logging.info("Waiting for connection to be created ...")
