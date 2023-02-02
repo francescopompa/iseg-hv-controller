@@ -17,9 +17,7 @@ class Commander:
         for mod in all_modules:
             for channel in mod.channels:
                 hardware_channel_addresses.add(str(channel))
-        config_channel_addresses = {
-            str(channel.addr) for channel in self.config.channels.values()
-        }
+        config_channel_addresses = {str(channel.addr) for channel in self.config.channels.values()}
         if hardware_channel_addresses == config_channel_addresses:
             return True
         else:
@@ -87,7 +85,12 @@ class Commander:
         takes the channel id and sets the values to either the supplied or the defaults.
         if both are None doesn't send the command
         """
-        channel = self.isc_client.channels_dict[channel_id]
+        try:
+            channel = self.isc_client.channels_dict[channel_id]
+        except KeyError as e:
+            logging.exception("Channel with this id doesnt exist/is not configured")
+            return False
+
         default_channel_config = self.config.defaults
 
         if not voltage:
@@ -103,6 +106,17 @@ class Commander:
             channel.setControlCurrentSet(trip_current)
         if power_status is not None:
             channel.setControlOn(power_status)
+        return True
+
+    def read_channel_info(self, ch_id):
+        """
+        TODO implement channel info
+        """
+        voltage_set = 0
+        voltage_measured = 0
+        current_set = 0
+        current_measured = 0
+        power_status = 0
 
     def set_ramp_speed(self, ramp_speed):
         for mod in self.isc_client.modules:
@@ -113,6 +127,7 @@ class Commander:
         this method loads a config from file and returns the config object
         so it can be overwritten in mainloop. TODO also has to be set here
         """
+        print("TODO implement")
         pass
         # TODO reload config
         config = None

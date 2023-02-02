@@ -45,6 +45,13 @@ class Interpreter(cmd.Cmd):
     )
     prompt = "(iseg_hv)"
 
+    @staticmethod
+    def clean_line(line: str) -> list[str]:
+        line = line.lower()
+        args = line.split()
+        args = [arg.strip(",.") for arg in args if arg.strip(",.")]
+        return args
+
     def preloop(self) -> None:
         logging.info("Started Interpreter Cmd Loop")
 
@@ -55,10 +62,9 @@ class Interpreter(cmd.Cmd):
         [arguments in brackets are optional]
         # maybe should have used an external cli parse/interpreter module that does this nicely
         for example docopt or click even argparse could have worked with some rearranging
+        TODO stub implement calls to commander
         """
-        line = line.lower()
-        args = line.split()
-        args = [arg.strip(",.") for arg in args if arg.strip(",.")]
+        args = self.clean_line(line)
 
         if len(args) == 0:
             print("Error Channel Id required")
@@ -69,15 +75,17 @@ class Interpreter(cmd.Cmd):
             print(f"Error parsing channel id:\n {str(e)}")
             logging.info(f"Error parsing channel id:\n {str(e)}")
             return
+        if len(args) == 1:
+            print("CHANNEL INFO")
 
         arg_dict = {}
         expecting_a_value = False
         expect_key = None
         if "on" in args and "off" in args:
-            print("Error. Got both on and off")
+            print("Error. Got both on and off flags")
             return
         for arg in args[1:]:
-            if expecting_a_value:  # handels key value pairs (v 100)
+            if expecting_a_value:  # handels key value pairs (eg.: v 100)
                 arg_dict[expect_key] = arg
                 expecting_a_value = False
                 continue
@@ -98,6 +106,58 @@ class Interpreter(cmd.Cmd):
             print(f"Error couldn't validate inputs: \n {e}")
             return
         print(channel_mod_values)
+
+    def do_rampspeed(self, line):
+        """
+        set the crate wide rampspeed in percentage of nominal Voltage(2kV) per second
+        default is 20V/s so 1% V_nom/s. maximum is 2% V_nom/sec or 40 V/s
+        note: values over 2 are interpreted as V/s with a warning
+        """
+        args = self.clean_line(line)
+        if len(args) != 1:
+            # TODO i really shouldn't have to validate all of this manually but now its to late
+            print("Error takes only 1 argument ")
+            return
+        arg = args[0]
+
+        try:
+            number = float(arg)
+        except ValueError as e:
+            print(f"Error couldnt convert argument {arg} to float")
+            return
+
+        if 0 < number <= 2:
+            percentage_v_nom_per_sec = number
+        elif 2 < number <= 40:
+            absolute_v_per_sec = number
+            v_nom = 2e3
+            percentage_v_nom_per_sec = absolute_v_per_sec / v_nom * 100
+            print(
+                f"Warning! input: {number} too large! \n"
+                f"interpreting it as absolute Volt/s and converting it"
+                f"to {percentage_v_nom_per_sec} %V_nom/s"
+            )
+        else:
+            print("Error input not in range 0  to 2 % V_nom per sec")
+            return
+
+        # TODO cmd set rampspeed
+
+    def do_config(self, line):
+        """
+        loads and applies another config
+        """
+        ...
+
+    def do_info(self, line):
+        """
+        print all info
+        """
+
+    def do_rawcmd(self, line):
+        """
+        send a raw command in json form maybe? dk
+        """
 
 
 if __name__ == "__main__":
