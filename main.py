@@ -2,11 +2,6 @@
 SEE README.md
 """
 import logging
-import time
-
-from ics_info import print_basic_info
-from configurator import ProgramConfig
-from isc_client import IcsClient
 from commander import Commander
 from interpreter import Interpreter
 import argparse
@@ -17,17 +12,12 @@ def main():
 
 
 if __name__ == "__main__":
-    """
-    TODO make it so starting from shell without commands uses the values defined by config and with some commands sends those
-    TODO add argparse (see rad commander project)
-    TODO cmd on off !
-    """
+    # TODO move to into main()
     main()
 
-    # TODO implement and test parser logic
     parser = argparse.ArgumentParser(
         prog="iseg HV Controller",
-        description="CLI to apply configs and commands to the iseg High Voltage Crate",
+        description="CLI to apply configs and send commands to the iseg High Voltage Crate",
     )
 
     parser.add_argument(
@@ -35,7 +25,7 @@ if __name__ == "__main__":
         "--filename",
         help="The file name to the toml config."
         "See the default config for options or look at the configurator class",
-        default="default_config.toml",  # TODO rename
+        default="default_config.toml",
     )
     parser.add_argument(
         "-c",
@@ -43,6 +33,7 @@ if __name__ == "__main__":
         help="sends a command to the server in the default or the supplied config"
         "multiple cmd instances allowed (eg.: -c ch1 on -c ch2 off)"
         "for syntax help see the interactive mode or the interpreter class",
+        nargs="*",
         action="append",
     )
     parser.add_argument(
@@ -58,21 +49,16 @@ if __name__ == "__main__":
     )
     logging.info("Started")
 
-    config = ProgramConfig()
+    args = parser.parse_args()
 
-    ics_client = IcsClient(
-        connection_name="ics_connection" + time.asctime(),
-        connection_parameters=f"ws://{config.server.ip}:{config.server.port}",
-        connection_login=config.server.username,
-        connection_password=config.server.password,
-    )
-
-    ics_client.connect()
-
-    print_basic_info(ics_client)
-
-    commander = Commander(ics_client, config)
+    commander = Commander(args.filename)
+    interpreter = Interpreter(commander)
     commander.apply_channels_config()
 
-    interpreter = Interpreter()
-    interpreter.cmdloop()
+    # Todo check this and everything done today. wrote while tired and in (mild) pain
+    if args.interactive:
+        interpreter.cmdloop()
+    if args.command:
+        for sep_cmd in args.command:
+            joined_cmd = "".join(sep_cmd)
+            interpreter.onecmd(joined_cmd)

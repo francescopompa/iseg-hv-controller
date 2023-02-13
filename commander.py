@@ -1,12 +1,28 @@
 from isc_client import IcsClient
 from configurator import ProgramConfig
 import logging
+import time
 
 
 class Commander:
-    def __init__(self, isc_client: IcsClient, config: ProgramConfig):
-        self.isc_client = isc_client
-        self.config = config
+    isc_client: IcsClient
+    config: ProgramConfig
+
+    def __init__(self, config_file_name=None):
+        if config_file_name:
+            self.config = ProgramConfig(config_file_name)
+        else:
+            self.config = ProgramConfig()
+
+        self.ics_client = IcsClient(
+            connection_name="ics_connection" + time.asctime(),
+            connection_parameters=f"ws://{self.config.server.ip}:{self.config.server.port}",
+            connection_login=self.config.server.username,
+            connection_password=self.config.server.password,
+        )
+
+        self.ics_client.connect()
+        # Todo refactor this to external call print_basic_info(ics_client)
         self.compare_config_addresses_to_client()
         self._load_channel_map_()
 
@@ -18,10 +34,10 @@ class Commander:
             for channel in mod.channels:
                 hardware_channel_addresses.add(str(channel))
         config_channel_addresses = {str(channel.addr) for channel in self.config.channels.values()}
-        if hardware_channel_addresses == config_channel_addresses:
+        if hardware_channel_addresses == config_channel_addresses:  # set have the same members
             return True
         else:
-            difference_hardware = hardware_channel_addresses - config_channel_addresses
+            difference_hardware = hardware_channel_addresses - config_channel_addresses  # set diff
             difference_config = config_channel_addresses - hardware_channel_addresses
             if difference_hardware:
                 logging.warning(
@@ -122,13 +138,17 @@ class Commander:
         for mod in self.isc_client.modules:
             mod.setControlCurrentRampspeed(ramp_speed)
 
-    def realtime_load_config(self, filename):
+    def realtime_load_config(self, config_file_name) -> bool:
         """
         this method loads a config from file and returns the config object
         so it can be overwritten in mainloop. TODO also has to be set here
         """
-        print("TODO implement")
-        pass
-        # TODO reload config
-        config = None
-        return config
+        new_config = ProgramConfig(config_file_name)
+        if new_config:
+            self.config = new_config
+        else:
+            logging.warning("New config wasn't applied!")
+            return False
+
+        self.apply_channels_config()
+        return True

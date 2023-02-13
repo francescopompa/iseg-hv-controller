@@ -5,9 +5,8 @@ import json
 import logging
 import sys
 import time
-from typing import Optional, Dict, List
+from typing import Dict, List
 import ics_helper
-from configurator import ProgramConfig
 from ics_channel_wrapper import ICSChannelAbstraction
 from ics_module_wrapper import ICSModuleAbstraction
 

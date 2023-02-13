@@ -2,9 +2,9 @@ import logging
 import re
 from collections import Counter
 from ipaddress import IPv4Address
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 
-from pydantic import BaseModel, validator, Field
+from pydantic import BaseModel, validator
 
 try:
     import tomllib
@@ -71,7 +71,7 @@ class ProgramConfig:
     defaults: DefaultsConfigSection
     channels: Dict[int, ChannelConfigSection]
 
-    def __init__(self, file="parameter_config_v1.toml"):
+    def __init__(self, file="default_config.toml"):
         self.file = file
         self.load()
         self.control_uniqueness_addresses()

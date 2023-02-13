@@ -1,33 +1,71 @@
 import cmd
-import argparse
 import logging
-from typing import Optional, List, Dict
+import sys
+from typing import Optional
 from pydantic import BaseModel, validator, ValidationError
 from commander import Commander
+import os
 
 
-class ChannelCommandValidator(BaseModel):
+def validate_channel_args(args: list) -> dict | bool:
     """
-    pydantic validator class for the channel section of config toml file
+    validates the channel command input
     """
 
-    v: Optional[float] = None
-    i: Optional[float] = None
-    power: Optional[bool] = None
+    class ChannelCommandValidator(BaseModel):
+        """
+        pydantic validator class for the channel section of config toml file
+        """
 
-    @validator("v")
-    def add_voltage_range_checker(cls, v):
-        if 0 < v <= 2000:
-            return v
-        else:
-            raise ValueError("Voltage out of range 0 to 2kV (V_nom)")
+        voltage: Optional[float] = None
+        trip_current: Optional[float] = None
+        power_status: Optional[bool] = None
 
-    @validator("i")
-    def add_current_range_checker(cls, i):
-        if 0 < i <= 4e-3:  # 4 mA
-            return i
-        else:
-            raise ValueError("Trip Current out of range 0 to 4mA (I_nom)")
+        @validator("voltage")
+        def add_voltage_range_checker(cls, v):
+            if 0 < v <= 2000:
+                return v
+            else:
+                raise ValueError("Voltage out of range 0 to 2kV (V_nom)")
+
+        @validator("trip_current")
+        def add_current_range_checker(cls, i):
+            if 0 < i <= 4e-3:  # 4 mA
+                return i
+            else:
+                raise ValueError("Trip Current out of range of up to 4mA (I_nom)")
+
+    arg_dict = {}
+    expecting_a_value = False
+    expect_key = None
+    if "on" in args and "off" in args:
+        logging.warning("Error. Got both on and off flags")
+        return False
+    for arg in args:
+        if expecting_a_value:  # handels key value pairs (eg.: v 100)
+            arg_dict[expect_key] = arg
+            expecting_a_value = False
+            continue
+        match arg:  # New in python 3.10 if older version used convert to if elif ...
+            case "on":
+                arg_dict["power_status"] = True
+            case "off":
+                arg_dict["power_status"] = False
+            case "v" | "voltage":
+                expect_key = "voltage"
+                expecting_a_value = True
+            case "i" | "current":
+                expect_key = "trip_current"
+                expecting_a_value = True
+            case _:
+                logging.warning(f"Error got unexpected argument: {arg}")
+                return False
+
+    try:
+        channel_mod_values = ChannelCommandValidator(**arg_dict)
+    except ValidationError as e:
+        logging.warning(f"Error couldn't validate inputs: \n {e}")
+        return False
 
 
 class Interpreter(cmd.Cmd):
@@ -35,9 +73,11 @@ class Interpreter(cmd.Cmd):
     interactive command line interpreter based on pythons Cmd module
     """
 
-    def __init__(self, commander: Commander = None):
+    commander: Commander
+
+    def __init__(self, commander: Commander):
         super().__init__()
-        self.commander = commander  # our self written commander not the super class. stupid name ik
+        self.commander = commander
 
     intro = (
         "Welcome to iseg HV controller shell. \n"
@@ -67,45 +107,21 @@ class Interpreter(cmd.Cmd):
         args = self.clean_line(line)
 
         if len(args) == 0:
-            print("Error Channel Id required")
+            logging.warning("Error Channel Id required")
             return
         try:
             channel_id = int(args[0], 0)  # parse int with base 0 allows for binary or hex
         except ValueError as e:
-            print(f"Error parsing channel id:\n {str(e)}")
             logging.info(f"Error parsing channel id:\n {str(e)}")
             return
         if len(args) == 1:
             print("CHANNEL INFO")
-
-        arg_dict = {}
-        expecting_a_value = False
-        expect_key = None
-        if "on" in args and "off" in args:
-            print("Error. Got both on and off flags")
+            # todo insert channel info here
+        args_dict = validate_channel_args(args[1:])
+        if not args_dict:
+            logging.info(f"Error parsing cmd args")
             return
-        for arg in args[1:]:
-            if expecting_a_value:  # handels key value pairs (eg.: v 100)
-                arg_dict[expect_key] = arg
-                expecting_a_value = False
-                continue
-            match arg:  # New in python 3.10 if older version used convert to if elif ...
-                case "on":
-                    arg_dict["power"] = True
-                case "off":
-                    arg_dict["power"] = False
-                case "v" | "i":
-                    expect_key = arg
-                    expecting_a_value = True
-                case _:
-                    print(f"Error got unexpected argument: {arg}")
-
-        try:
-            channel_mod_values = ChannelCommandValidator(**arg_dict)
-        except ValidationError as e:
-            print(f"Error couldn't validate inputs: \n {e}")
-            return
-        print(channel_mod_values)
+        self.commander.modify_channel(channel_id, **args_dict)
 
     def do_rampspeed(self, line):
         """
@@ -115,15 +131,14 @@ class Interpreter(cmd.Cmd):
         """
         args = self.clean_line(line)
         if len(args) != 1:
-            # TODO i really shouldn't have to validate all of this manually but now its to late
-            print("Error takes only 1 argument ")
+            logging.warning("Error takes only 1 argument ")
             return
         arg = args[0]
 
         try:
             number = float(arg)
         except ValueError as e:
-            print(f"Error couldnt convert argument {arg} to float")
+            logging.warning(f"Error couldnt convert argument {arg} to float")
             return
 
         if 0 < number <= 2:
@@ -132,34 +147,67 @@ class Interpreter(cmd.Cmd):
             absolute_v_per_sec = number
             v_nom = 2e3
             percentage_v_nom_per_sec = absolute_v_per_sec / v_nom * 100
-            print(
+            logging.warning(
                 f"Warning! input: {number} too large! \n"
                 f"interpreting it as absolute Volt/s and converting it "
                 f"to {percentage_v_nom_per_sec} %V_nom/s"
             )
         else:
-            print("Error input not in range 0  to 2 % V_nom per sec")
+            logging.warning("Error input not in range 0  to 2 % V_nom per sec")
             return
 
-        # TODO cmd set rampspeed
+        self.commander.set_ramp_speed(percentage_v_nom_per_sec)
 
     def do_config(self, line):
         """
         loads and applies another config
         """
-        ...
+        args = self.clean_line(line)
+        if len(args) != 1:
+            logging.warning("Error! takes only 1 argument ")
+            return
+        file_name = args[0]
+        if not os.path.isfile(file_name):
+            logging.warning("Error! File name seems to be incorrect")
+        if self.commander.realtime_load_config(file_name):
+            logging.info("Success loading config")
+        else:
+            logging.info("Something went wrong loading config")
 
     def do_info(self, line):
         """
         print all info
         """
+        print("TODO")
+
+    def do_defaults(self, line):
+        """
+        applies the defaults in the config to all channels
+        """
+        logging.info("Applying the default values to all channels")
+        self.commander.reset_all_to_defaults()
+
+    def do_all(self, line):
+        """
+        syntax see ch.
+        applies the values to all channels
+        """
+        args = self.clean_line(line)
+
+        args_dict = validate_channel_args(args)
+        logging.info("Applying these values to all channels:" + str(args_dict))
+
+        for channel_id in self.commander.isc_client.channels_dict:
+            self.commander.modify_channel(channel_id, **args_dict)
 
     def do_rawcmd(self, line):
         """
         send a raw command in json form maybe? dk
         """
+        print("NOT IMPLEMENTED")
 
-
-if __name__ == "__main__":
-    interpreter = Interpreter()
-    interpreter.cmdloop()
+    def do_quit(self, line):
+        """
+        quits
+        """
+        sys.exit(0)
