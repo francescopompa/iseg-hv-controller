@@ -1,11 +1,11 @@
-from isc_client import IcsClient
+from ics_client import IcsClient
 from configurator import ProgramConfig
 import logging
 import time
 
 
 class Commander:
-    isc_client: IcsClient
+    ics_client: IcsClient
     config: ProgramConfig
 
     def __init__(self, config_file_name=None):
@@ -27,7 +27,7 @@ class Commander:
         self._load_channel_map_()
 
     def compare_config_addresses_to_client(self):
-        all_modules = self.isc_client.connection.getModules()
+        all_modules = self.ics_client.connection.getModules()
 
         hardware_channel_addresses = set()
         for mod in all_modules:
@@ -54,21 +54,21 @@ class Commander:
     def _load_channel_map_(self):
         """
         This function is called from init and applies the mapping of
-        the channel address and channel id to the isc_client class.
+        the channel address and channel id to the ics_client class.
         there a channel dict ist constructed
         TODO is there a better way todo this?
         """
         addr_to_id_map = {c.addr: ch_id for ch_id, c in self.config.channels.items()}
-        self.isc_client.load_channels_and_modules(addr_to_id_map)
+        self.ics_client.load_channels_and_modules(addr_to_id_map)
 
     def reset_all_to_defaults(self):
         voltage = self.config.defaults.voltage
         ramp_speed = self.config.defaults.ramp_speed
         trip_current = self.config.defaults.trip_current
         power_status = self.config.defaults.power_status
-        for module in self.isc_client.modules:
+        for module in self.ics_client.modules:
             module.setControlVoltageRampspeed(ramp_speed)
-        for channel in self.isc_client.channels_dict.values():
+        for channel in self.ics_client.channels_dict.values():
             # zero voltage doesn't matter
             if voltage:
                 channel.setControlVoltageSet(voltage)
@@ -83,7 +83,7 @@ class Commander:
         """
         TODO ADD RESPONSE AND CHECK IF CHANGE successful
         """
-        for ch_id in self.isc_client.channels_dict.keys():
+        for ch_id in self.ics_client.channels_dict.keys():
             config_channel = self.config.channels[ch_id]
             voltage = config_channel.voltage
             trip_current = config_channel.trip_current
@@ -102,7 +102,7 @@ class Commander:
         if both are None doesn't send the command
         """
         try:
-            channel = self.isc_client.channels_dict[channel_id]
+            channel = self.ics_client.channels_dict[channel_id]
         except KeyError as e:
             logging.exception("Channel with this id doesnt exist/is not configured")
             return False
@@ -135,7 +135,7 @@ class Commander:
         power_status = 0
 
     def set_ramp_speed(self, ramp_speed):
-        for mod in self.isc_client.modules:
+        for mod in self.ics_client.modules:
             mod.setControlCurrentRampspeed(ramp_speed)
 
     def realtime_load_config(self, config_file_name) -> bool:

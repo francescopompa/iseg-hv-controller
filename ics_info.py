@@ -1,6 +1,6 @@
 import logging
 import time
-from isc_client import IcsClient
+from ics_client import IcsClient
 from ics_module_wrapper import ICSModuleAbstraction
 from ics_channel_wrapper import ICSChannelAbstraction
 import inspect

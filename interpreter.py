@@ -197,7 +197,7 @@ class Interpreter(cmd.Cmd):
         args_dict = validate_channel_args(args)
         logging.info("Applying these values to all channels:" + str(args_dict))
 
-        for channel_id in self.commander.isc_client.channels_dict:
+        for channel_id in self.commander.ics_client.channels_dict:
             self.commander.modify_channel(channel_id, **args_dict)
 
     def do_rawcmd(self, line):

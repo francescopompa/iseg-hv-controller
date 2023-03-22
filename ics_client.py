@@ -13,8 +13,8 @@ from ics_module_wrapper import ICSModuleAbstraction
 
 class IcsClient:
     """
-    Object to talk with the isc of the iseg HV
-    The isc library needs to be correctly setup see ics_helper.py for more.
+    Object to talk with the ics of the iseg HV
+    The ics library needs to be correctly setup see ics_helper.py for more.
     most manipulation will probably be via the channels_dict.
     it takes ach_id and returns a channel object
     """
