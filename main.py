@@ -8,13 +8,6 @@ import argparse
 
 
 def main():
-    ...
-
-
-if __name__ == "__main__":
-    # TODO move to into main()
-    main()
-
     parser = argparse.ArgumentParser(
         prog="iseg HV Controller",
         description="CLI to apply configs and send commands to the iseg High Voltage Crate",
@@ -23,28 +16,29 @@ if __name__ == "__main__":
     parser.add_argument(
         "-f",
         "--filename",
-        help="The file name to the toml config."
-        "See the default config for options or look at the configurator class",
+        help="The file name to the toml config.See the default config for options or look at the configurator class",
         default="default_config.toml",
     )
     parser.add_argument(
         "-c",
         "--command",
-        help="sends a command to the server in the default or the supplied config"
-        "multiple cmd instances allowed (eg.: -c ch1 on -c ch2 off)"
-        "for syntax help see the interactive mode or the interpreter class",
+        help=(
+            "sends a command to the server in the default or the supplied config"
+            "multiple cmd instances allowed (eg.: -c ch1 on -c ch2 off)"
+            "for syntax help see the interactive mode or the interpreter class"
+        ),
         nargs="*",
         action="append",
     )
     parser.add_argument(
         "-i",
         "--interactive",
-        help="starts the interactive mode" "for help type help or see the interpreter class",
+        help="starts the interactive modefor help type help or see the interpreter class",
         action="store_true",
     )
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s::%(levelname)s::%(filename)s:%(funcName)s:%(lineno)d::\t%(message)s",
+        format="%(levelname)s::%(filename)s:\t%(message)s",
         handlers=[logging.StreamHandler(), logging.FileHandler("hv_controller.log")],
     )
     logging.info("Started")
@@ -55,10 +49,13 @@ if __name__ == "__main__":
     interpreter = Interpreter(commander)
     commander.apply_channels_config()
 
-    # Todo check this and everything done today. wrote while tired and in (mild) pain
-    if args.interactive:
-        interpreter.cmdloop()
     if args.command:
         for sep_cmd in args.command:
             joined_cmd = "".join(sep_cmd)
             interpreter.onecmd(joined_cmd)
+    if args.interactive:
+        interpreter.cmdloop()
+
+
+if __name__ == "__main__":
+    main()

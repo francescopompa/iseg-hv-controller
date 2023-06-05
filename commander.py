@@ -2,6 +2,7 @@ from ics_client import IcsClient
 from configurator import ProgramConfig
 import logging
 import time
+import ics_info
 
 
 class Commander:
@@ -40,15 +41,11 @@ class Commander:
             difference_hardware = hardware_channel_addresses - config_channel_addresses  # set diff
             difference_config = config_channel_addresses - hardware_channel_addresses
             if difference_hardware:
-                logging.warning(
-                    "WARNING! Not all hardware channels are described with config addresses"
-                )
+                logging.warning("WARNING! Not all hardware channels are described with config addresses")
             if difference_config:
                 logging.warning("WARNING! Not all channels addresses in config exists")
             if not difference_hardware and not difference_config:
-                logging.warning(
-                    "something went wrong while comparing config and hardware addresses"
-                )
+                logging.warning("something went wrong while comparing config and hardware addresses")
             return False
 
     def _load_channel_map_(self):
@@ -82,6 +79,7 @@ class Commander:
     def apply_channels_config(self):
         """
         TODO ADD RESPONSE AND CHECK IF CHANGE successful
+         really out of scope
         """
         for ch_id in self.ics_client.channels_dict.keys():
             config_channel = self.config.channels[ch_id]
@@ -126,13 +124,15 @@ class Commander:
 
     def read_channel_info(self, ch_id):
         """
-        TODO implement channel info
+        prints channel info and complete channel info. last function call can be removed if unwanted/TMI
         """
-        voltage_set = 0
-        voltage_measured = 0
-        current_set = 0
-        current_measured = 0
-        power_status = 0
+        try:
+            channel = self.ics_client.channels_dict[ch_id]
+        except KeyError as e:
+            logging.exception("Channel with this id doesnt exist/is not configured")
+            return False
+        print(ics_info.get_channel_info(ch_id, channel))
+        print(ics_info.get_complete_channel_info(channel))
 
     def set_ramp_speed(self, ramp_speed):
         for mod in self.ics_client.modules:

@@ -5,6 +5,8 @@ from typing import Optional
 from pydantic import BaseModel, validator, ValidationError
 from commander import Commander
 import os
+import ics_info
+import time
 
 
 def validate_channel_args(args: list) -> dict | bool:
@@ -21,14 +23,14 @@ def validate_channel_args(args: list) -> dict | bool:
         trip_current: Optional[float] = None
         power_status: Optional[bool] = None
 
-        @validator("voltage")
+        @validator("voltage", allow_reuse=True)
         def add_voltage_range_checker(cls, v):
-            if 0 < v <= 2000:
+            if 0 <= v <= 2000:
                 return v
             else:
                 raise ValueError("Voltage out of range 0 to 2kV (V_nom)")
 
-        @validator("trip_current")
+        @validator("trip_current", allow_reuse=True)
         def add_current_range_checker(cls, i):
             if 0 < i <= 4e-3:  # 4 mA
                 return i
@@ -63,6 +65,7 @@ def validate_channel_args(args: list) -> dict | bool:
 
     try:
         channel_mod_values = ChannelCommandValidator(**arg_dict)
+        return channel_mod_values.dict()
     except ValidationError as e:
         logging.warning(f"Error couldn't validate inputs: \n {e}")
         return False
@@ -79,10 +82,7 @@ class Interpreter(cmd.Cmd):
         super().__init__()
         self.commander = commander
 
-    intro = (
-        "Welcome to iseg HV controller shell. \n"
-        "Type help or ? for a list of available commands \n"
-    )
+    intro = "Welcome to iseg HV controller shell. \nType help or ? for a list of available commands \n"
     prompt = "(iseg_hv)"
 
     @staticmethod
@@ -93,6 +93,7 @@ class Interpreter(cmd.Cmd):
         return args
 
     def preloop(self) -> None:
+        time.sleep(4)  # to remove annyong backup message from iseg
         logging.info("Started Interpreter Cmd Loop")
 
     def do_ch(self, line: str):
@@ -102,25 +103,28 @@ class Interpreter(cmd.Cmd):
         [arguments in brackets are optional]
         # maybe should have used an external cli parse/interpreter module that does this nicely
         for example docopt or click even argparse could have worked with some rearranging
-        TODO stub implement calls to commander
         """
         args = self.clean_line(line)
 
         if len(args) == 0:
             logging.warning("Error Channel Id required")
             return
+
         try:
             channel_id = int(args[0], 0)  # parse int with base 0 allows for binary or hex
         except ValueError as e:
             logging.info(f"Error parsing channel id:\n {str(e)}")
             return
+
         if len(args) == 1:
-            print("CHANNEL INFO")
-            # todo insert channel info here
+            self.commander.read_channel_info(channel_id)
+            return
+
         args_dict = validate_channel_args(args[1:])
         if not args_dict:
-            logging.info(f"Error parsing cmd args")
+            logging.info("Error parsing cmd args")
             return
+
         self.commander.modify_channel(channel_id, **args_dict)
 
     def do_rampspeed(self, line):
@@ -131,7 +135,7 @@ class Interpreter(cmd.Cmd):
         """
         args = self.clean_line(line)
         if len(args) != 1:
-            logging.warning("Error takes only 1 argument ")
+            logging.warning("Error takes exactly 1 argument ")
             return
         arg = args[0]
 
@@ -149,7 +153,7 @@ class Interpreter(cmd.Cmd):
             percentage_v_nom_per_sec = absolute_v_per_sec / v_nom * 100
             logging.warning(
                 f"Warning! input: {number} too large! \n"
-                f"interpreting it as absolute Volt/s and converting it "
+                "interpreting it as absolute Volt/s and converting it "
                 f"to {percentage_v_nom_per_sec} %V_nom/s"
             )
         else:
@@ -157,6 +161,13 @@ class Interpreter(cmd.Cmd):
             return
 
         self.commander.set_ramp_speed(percentage_v_nom_per_sec)
+
+    def do_reset(self, line):
+        """
+        re-applies the config
+        """
+        logging.info("Reapplying the config")
+        self.commander.apply_channels_config()
 
     def do_config(self, line):
         """
@@ -177,12 +188,14 @@ class Interpreter(cmd.Cmd):
     def do_info(self, line):
         """
         print all info
+        last function call can be removed if TMI
         """
-        print("TODO")
+        ics_info.print_basic_info(self.commander.ics_client)
+        print(*ics_info.get_all_channel_infos(self.commander.ics_client), sep="\n")
 
     def do_defaults(self, line):
         """
-        applies the defaults in the config to all channels
+        applies the defaults section in the config to all channels
         """
         logging.info("Applying the default values to all channels")
         self.commander.reset_all_to_defaults()
@@ -193,8 +206,14 @@ class Interpreter(cmd.Cmd):
         applies the values to all channels
         """
         args = self.clean_line(line)
-
+        if len(args) == 0:
+            logging.warning("error not sufficient arguments provided")
+            return
         args_dict = validate_channel_args(args)
+        if not args_dict:
+            logging.info("Error parsing cmd args")
+            return
+
         logging.info("Applying these values to all channels:" + str(args_dict))
 
         for channel_id in self.commander.ics_client.channels_dict:
@@ -204,7 +223,7 @@ class Interpreter(cmd.Cmd):
         """
         send a raw command in json form maybe? dk
         """
-        print("NOT IMPLEMENTED")
+        logging.warning("NOT IMPLEMENTED")
 
     def do_quit(self, line):
         """
