@@ -51,6 +51,7 @@ def main():
 
     if args.command:
         for sep_cmd in args.command:
+            "-c 'sep_cmd_as_list' - c  'other_cmd_as_list' for example"
             joined_cmd = " ".join(sep_cmd)
             interpreter.onecmd(joined_cmd)
     if args.interactive:
