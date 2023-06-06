@@ -24,7 +24,7 @@ def main():
         "--command",
         help=(
             "sends a command to the server in the default or the supplied config"
-            "multiple cmd instances allowed (eg.: -c ch1 on -c ch2 off)"
+            "multiple cmd instances allowed (eg.: -c ch 1 on -c ch 2 off -c ch5 v 100)"
             "for syntax help see the interactive mode or the interpreter class"
         ),
         nargs="*",
@@ -51,7 +51,7 @@ def main():
 
     if args.command:
         for sep_cmd in args.command:
-            joined_cmd = "".join(sep_cmd)
+            joined_cmd = " ".join(sep_cmd)
             interpreter.onecmd(joined_cmd)
     if args.interactive:
         interpreter.cmdloop()
