@@ -1,8 +1,25 @@
 [tool.poetry]
-name = "controller"
+name = "isegcontroller"
 version = "0.1.0"
 description = ""
 authors = ["Marc Martini <marc.martini@student.kit.edu>"]
+include = [
+    'default_config.toml',
+    'libs/icsPythonForLinux/platform/linux/64/python-3.5.7/*',
+    'libs/icsPythonForLinux/platform/linux/64/python-3.5.7/**/*',
+    'libs/icsPythonForLinux/platform/linux/64/*',
+    'libs/icsPythonForLinux/platform/linux/64/icsClientPython_3.so',
+    'libs/icsPythonForWindows/bin/*',
+    'libs/icsPythonForWindows/bin/**/*',
+    'libs/icsPythonForWindows/bin/python-3.7.1/**/*',
+    'libs/icsPythonForWindows/bin/icsClientPython_3.pyd'
+]
+#package-data = ['./libs/']
+#packages = ["icsPythonForLinux", "icsPythonForWindows"]
+#files are included i think
+
+[tool.poetry.scripts]
+iseg-controller = "isegcontroller.main:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -11,6 +28,10 @@ pydantic = "^1.10.4"
 
 [tool.poetry.dev-dependencies]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.group.dev.dependencies]
+setuptools = "^67.8.0"
+build = "^0.10.0"
+
+#[tool.poetry.setuptools]
+
+

@@ -1,12 +1,12 @@
 # PULLED FROM github gitignore repo
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
+#*.py[cod]
+#*$py.class
 
 # C extensions
-*.so
-
+#*.so
+!libs
 # Distribution / packaging
 .Python
 build/
