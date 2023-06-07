@@ -29,10 +29,10 @@ def import_from_path(rel_module_path, module_name=""):
     if rel_module_path == "":
         if platform.system() == "Windows":
             rel_module_path = Path(os.path.dirname(script_path))
-            rel_module_path = rel_module_path.parent / "libs" / "icsPythonForWindows" / "bin"
+            rel_module_path = rel_module_path.parent / "iseg_libs" / "icsPythonForWindows" / "bin"
         elif platform.system() == "Linux":
             rel_module_path = Path(os.path.dirname(script_path))
-            rel_module_path = rel_module_path.parent / "libs" / "icsPythonForLinux" / "platform" / "linux" / "64"
+            rel_module_path = rel_module_path.parent / "iseg_libs" / "icsPythonForLinux" / "platform" / "linux" / "64"
 
     if rel_module_path != "":
         sys.path.append(str(rel_module_path.absolute()))

@@ -5,6 +5,27 @@ import logging
 from isegcontroller.commander import Commander
 from isegcontroller.interpreter import Interpreter
 import argparse
+from pathlib import Path
+
+
+def create_interpreter(file_name: Path) -> Interpreter:
+    """
+    creates and returns the cmdline interpreter.
+    cmds can the be given with interpreter.onecmd('cmd_string') like from the cli
+    :param file_name: Path
+    :return: interpreter: isegcontroller.interpreter.Interpreter
+    """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(levelname)s::%(filename)s:\t%(message)s",
+        handlers=[logging.StreamHandler(), logging.FileHandler("hv_controller.log")],
+    )
+    logging.info("Started")
+
+    commander = Commander(file_name)
+    interpreter = Interpreter(commander)
+    commander.apply_channels_config()
+    return interpreter
 
 
 def main():
@@ -13,11 +34,12 @@ def main():
         description="CLI to apply configs and send commands to the iseg High Voltage Crate",
     )
 
+    rel_path = Path(__file__).parent.parent.absolute()
     parser.add_argument(
         "-f",
         "--filename",
         help="The file name to the toml config.See the default config for options or look at the configurator class",
-        default="../default_config.toml",
+        default=f"{rel_path}/iseg_libs/default_config.toml",
     )
     parser.add_argument(
         "-c",

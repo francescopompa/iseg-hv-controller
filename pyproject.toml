@@ -1,20 +1,20 @@
 [tool.poetry]
 name = "isegcontroller"
-version = "0.1.0"
+version = "0.9.0"
 description = ""
 authors = ["Marc Martini <marc.martini@student.kit.edu>"]
 include = [
-    'default_config.toml',
-    'libs/icsPythonForLinux/platform/linux/64/python-3.5.7/*',
-    'libs/icsPythonForLinux/platform/linux/64/python-3.5.7/**/*',
-    'libs/icsPythonForLinux/platform/linux/64/*',
-    'libs/icsPythonForLinux/platform/linux/64/icsClientPython_3.so',
-    'libs/icsPythonForWindows/bin/*',
-    'libs/icsPythonForWindows/bin/**/*',
-    'libs/icsPythonForWindows/bin/python-3.7.1/**/*',
-    'libs/icsPythonForWindows/bin/icsClientPython_3.pyd'
+    'iseg_libs/default_config.toml',
+    'iseg_libs/icsPythonForLinux/platform/linux/64/python-3.5.7/*',
+    'iseg_libs/icsPythonForLinux/platform/linux/64/python-3.5.7/**/*',
+    'iseg_libs/icsPythonForLinux/platform/linux/64/*',
+    'iseg_libs/icsPythonForLinux/platform/linux/64/icsClientPython_3.so',
+    'iseg_libs/icsPythonForWindows/bin/*',
+    'iseg_libs/icsPythonForWindows/bin/**/*',
+    'iseg_libs/icsPythonForWindows/bin/python-3.7.1/**/*',
+    'iseg_libs/icsPythonForWindows/bin/icsClientPython_3.pyd'
 ]
-#package-data = ['./libs/']
+#package-data = ['./iseg_libs/']
 #packages = ["icsPythonForLinux", "icsPythonForWindows"]
 #files are included i think
 
