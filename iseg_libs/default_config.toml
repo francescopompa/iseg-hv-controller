@@ -1,12 +1,12 @@
 [Server]
-ip = "192.168.0.10"
+ip = "192.168.3.1"
 port = "8080"
 username = "admin"
 password = "password"
 
 [Defaults]
 voltage = 0 # Volt
-ramp_speed = 1 # % Volt nominal per sec == 20V/s
+ramp_speed = 40 # % Volt nominal per sec == 20V/s
 # Can only be change module wise
 trip_current = 350E-6 # Ampere
 power_status = true # nicht alle an?
@@ -116,26 +116,51 @@ addr = "0.1.14"
 [Channels.32]
 addr = "0.1.15"
 
-#[Channels.33]
-#addr = "0.2.0"
-#
-#[Channels.34]
-#addr = "0.2.1"
-#
-#[Channels.35]
-#addr = "0.2.2"
-#
-#[Channels.36]
-#addr = "0.2.3"
-#
-#[Channels.37]
-#addr = "0.2.4"
-#
-#[Channels.38]
-#addr = "0.2.5"
-#
-#[Channels.39]
-#addr = "0.2.6"
-#
-#[Channels.40]
-#addr = "0.2.7"
+[Channels.33]
+addr = "0.2.0"
+
+[Channels.34]
+addr = "0.2.1"
+
+[Channels.35]
+addr = "0.2.2"
+
+[Channels.36]
+addr = "0.2.3"
+
+[Channels.37]
+addr = "0.2.4"
+
+[Channels.38]
+addr = "0.2.5"
+
+[Channels.39]
+addr = "0.2.6"
+
+[Channels.40]
+addr = "0.2.7"
+
+[Channels.41]
+addr = "0.2.8"
+
+[Channels.42]
+addr = "0.2.9"
+
+[Channels.43]
+addr = "0.2.10"
+
+[Channels.44]
+addr = "0.2.11"
+
+[Channels.45]
+addr = "0.2.12"
+
+[Channels.46]
+addr = "0.2.13"
+
+[Channels.47]
+addr = "0.2.14"
+
+[Channels.48]
+addr = "0.2.15"
+
