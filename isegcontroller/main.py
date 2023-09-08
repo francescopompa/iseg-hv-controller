@@ -2,6 +2,8 @@
 SEE README.md
 """
 import logging
+import sys
+sys.path.append('/home/ndcalib/Desktop/iseg-hv-controller')
 from isegcontroller.commander import Commander
 from isegcontroller.interpreter import Interpreter
 import argparse
