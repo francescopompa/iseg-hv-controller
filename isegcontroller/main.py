@@ -30,26 +30,26 @@ def create_interpreter(file_name: Path) -> Interpreter:
     return interpreter
 
 
-def main():
+def parse_arguments():
     parser = argparse.ArgumentParser(
         prog="iseg HV Controller",
-        description="CLI to apply configs and send commands to the iseg High Voltage Crate",
+        description="CLI to apply toml configurations and send commands to the iseg High Voltage Crate",
     )
 
     rel_path = Path(__file__).parent.parent.absolute()
     parser.add_argument(
         "-f",
         "--filename",
-        help="The file name to the toml config.See the default config for options or look at the configurator class",
+        help="The file path to the toml configuration file. See the default config for the possible options, or look at the configurator class",
         default=f"{rel_path}/iseg_libs/default_config.toml",
     )
     parser.add_argument(
         "-c",
         "--command",
         help=(
-            "sends a command to the server in the default or the supplied config"
-            "multiple cmd instances allowed (eg.: -c ch 1 on -c ch 2 off -c ch5 v 100)"
-            "for syntax help see the interactive mode or the interpreter class"
+            "sends a command to the server specified in the default or the supplied configuration."
+            " Multiple cmd instances are allowed (eg.: -c ch 1 on -c ch 2 off -c ch5 v 100)."
+            " For syntax help, refer to the interactive mode or the interpreter class"
         ),
         nargs="*",
         action="append",
@@ -57,7 +57,7 @@ def main():
     parser.add_argument(
         "-i",
         "--interactive",
-        help="starts the interactive modefor help type help or see the interpreter class",
+        help="Starts the interactive mode. For help, type help or inspect the interpreter class",
         action="store_true",
     )
     logging.basicConfig(
@@ -67,7 +67,12 @@ def main():
     )
     logging.info("Started")
 
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+
+    args = parse_arguments()
 
     commander = Commander(args.filename)
     interpreter = Interpreter(commander)
