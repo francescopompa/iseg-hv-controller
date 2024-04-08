@@ -1,5 +1,5 @@
 [Server]
-ip = "192.168.3.1"
+ip = "192.168.1.16"
 port = "8080"
 username = "admin"
 password = "password"
