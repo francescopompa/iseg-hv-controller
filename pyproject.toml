@@ -1,37 +1,41 @@
-[tool.poetry]
-name = "isegcontroller"
+[project]
+name = "iseg-hv-controller"
 version = "0.9.0"
-description = ""
-authors = ["Marc Martini <marc.martini@student.kit.edu>"]
-include = [
-    'iseg_libs/default_config.toml',
-    'iseg_libs/icsPythonForLinux/platform/linux/64/python-3.5.7/*',
-    'iseg_libs/icsPythonForLinux/platform/linux/64/python-3.5.7/**/*',
-    'iseg_libs/icsPythonForLinux/platform/linux/64/*',
-    'iseg_libs/icsPythonForLinux/platform/linux/64/icsClientPython_3.so',
-    'iseg_libs/icsPythonForWindows/bin/*',
-    'iseg_libs/icsPythonForWindows/bin/**/*',
-    'iseg_libs/icsPythonForWindows/bin/python-3.7.1/**/*',
-    'iseg_libs/icsPythonForWindows/bin/icsClientPython_3.pyd'
+authors = [
+    { name="Francesco Pompa", email="francesco.pompa@kit.edu" },
 ]
-#package-data = ['./iseg_libs/']
-#packages = ["icsPythonForLinux", "icsPythonForWindows"]
-#files are included i think
+description = "Tools to deal with HV"
+readme = "README.md"
+requires-python = ">=3.10.11"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.10",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+    "License :: Free To Use But Restricted",
+]
+keywords = [
+    "detector", "neutron", "LNGS", "Gran Sasso", "RADC", "FPGA", "DAQ",
+    "IAP", "KIT", "high voltage"
+]
 
-[tool.poetry.scripts]
-iseg-controller = "isegcontroller.main:main"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-tomli = { version = "^2.0.1", markers = "python_version <'3.11'" }
-pydantic = "^1.10.4"
-
-[tool.poetry.dev-dependencies]
-
-[tool.poetry.group.dev.dependencies]
-setuptools = "^67.8.0"
-build = "^0.10.0"
-
-#[tool.poetry.setuptools]
+dynamic = ["dependencies"]
 
 
+
+[tool.setuptools.package-dir]
+isegcontroller = "isegcontroller"
+configFiles = "configFiles"
+
+
+[options.packages_data]
+"*" = ["pyproject.toml"]
+"data_parser" = ["*.yaml"]
+
+[tools.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[build-system]
+requires = ["setuptools>=64.0", "setuptools-ext"]
+# build-backend = "setuptools.build_meta"
+build-backend = "setuptools_ext"
