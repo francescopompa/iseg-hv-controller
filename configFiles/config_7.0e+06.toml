@@ -10,289 +10,289 @@ ramp_speed = 40
 trip_current = 0.00035
 power_status = true
 
-["Channels.1"]
+[Channels.1]
 addr = "0.0.0"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.2"]
+[Channels.2]
 addr = "0.0.1"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.3"]
+[Channels.3]
 addr = "0.0.2"
 voltage = 1456
 trip_current = 0.00035
 power_status = true
 
-["Channels.4"]
+[Channels.4]
 addr = "0.0.3"
 voltage = 1649
 trip_current = 0.00035
 power_status = true
 
-["Channels.5"]
+[Channels.5]
 addr = "0.0.4"
 voltage = 1722
 trip_current = 0.00035
 power_status = true
 
-["Channels.6"]
+[Channels.6]
 addr = "0.0.5"
 voltage = 1607
 trip_current = 0.00035
 power_status = true
 
-["Channels.7"]
+[Channels.7]
 addr = "0.0.6"
 voltage = 1649
 trip_current = 0.00035
 power_status = true
 
-["Channels.8"]
+[Channels.8]
 addr = "0.0.7"
 voltage = 1763
 trip_current = 0.00035
 power_status = true
 
-["Channels.9"]
+[Channels.9]
 addr = "0.0.8"
 voltage = 1666
 trip_current = 0.00035
 power_status = true
 
-["Channels.10"]
+[Channels.10]
 addr = "0.0.9"
 voltage = 2065
 trip_current = 0.00035
 power_status = true
 
-["Channels.11"]
+[Channels.11]
 addr = "0.0.10"
 voltage = 1953
 trip_current = 0.00035
 power_status = true
 
-["Channels.12"]
+[Channels.12]
 addr = "0.0.11"
 voltage = 1616
 trip_current = 0.00035
 power_status = true
 
-["Channels.13"]
+[Channels.13]
 addr = "0.0.12"
 voltage = 1493
 trip_current = 0.00035
 power_status = true
 
-["Channels.14"]
+[Channels.14]
 addr = "0.0.13"
 voltage = 1861
 trip_current = 0.00035
 power_status = true
 
-["Channels.15"]
+[Channels.15]
 addr = "0.0.14"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.16"]
+[Channels.16]
 addr = "0.0.15"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.17"]
+[Channels.17]
 addr = "0.1.0"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.18"]
+[Channels.18]
 addr = "0.1.1"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.19"]
+[Channels.19]
 addr = "0.1.2"
 voltage = 1632
 trip_current = 0.00035
 power_status = true
 
-["Channels.20"]
+[Channels.20]
 addr = "0.1.3"
 voltage = 2103
 trip_current = 0.00035
 power_status = true
 
-["Channels.21"]
+[Channels.21]
 addr = "0.1.4"
 voltage = 1525
 trip_current = 0.00035
 power_status = true
 
-["Channels.22"]
+[Channels.22]
 addr = "0.1.5"
 voltage = 1860
 trip_current = 0.00035
 power_status = true
 
-["Channels.23"]
+[Channels.23]
 addr = "0.1.6"
 voltage = 1611
 trip_current = 0.00035
 power_status = true
 
-["Channels.24"]
+[Channels.24]
 addr = "0.1.7"
 voltage = 1710
 trip_current = 0.00035
 power_status = true
 
-["Channels.25"]
+[Channels.25]
 addr = "0.1.8"
 voltage = 1677
 trip_current = 0.00035
 power_status = true
 
-["Channels.26"]
+[Channels.26]
 addr = "0.1.9"
 voltage = 1592
 trip_current = 0.00035
 power_status = true
 
-["Channels.27"]
+[Channels.27]
 addr = "0.1.10"
 voltage = 1963
 trip_current = 0.00035
 power_status = true
 
-["Channels.28"]
+[Channels.28]
 addr = "0.1.11"
 voltage = 1687
 trip_current = 0.00035
 power_status = true
 
-["Channels.29"]
+[Channels.29]
 addr = "0.1.12"
 voltage = 1504
 trip_current = 0.00035
 power_status = true
 
-["Channels.30"]
+[Channels.30]
 addr = "0.1.13"
 voltage = 1550
 trip_current = 0.00035
 power_status = true
 
-["Channels.31"]
+[Channels.31]
 addr = "0.1.14"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.32"]
+[Channels.32]
 addr = "0.1.15"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.33"]
+[Channels.33]
 addr = "0.2.0"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.34"]
+[Channels.34]
 addr = "0.2.1"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.35"]
+[Channels.35]
 addr = "0.2.2"
 voltage = 1461
 trip_current = 0.00035
 power_status = true
 
-["Channels.36"]
+[Channels.36]
 addr = "0.2.3"
 voltage = 2077
 trip_current = 0.00035
 power_status = true
 
-["Channels.37"]
+[Channels.37]
 addr = "0.2.4"
 voltage = 2024
 trip_current = 0.00035
 power_status = true
 
-["Channels.38"]
+[Channels.38]
 addr = "0.2.5"
 voltage = 1709
 trip_current = 0.00035
 power_status = true
 
-["Channels.39"]
+[Channels.39]
 addr = "0.2.6"
 voltage = 1534
 trip_current = 0.00035
 power_status = true
 
-["Channels.40"]
+[Channels.40]
 addr = "0.2.7"
 voltage = 1507
 trip_current = 0.00035
 power_status = true
 
-["Channels.41"]
+[Channels.41]
 addr = "0.2.8"
 voltage = 1613
 trip_current = 0.00035
 power_status = true
 
-["Channels.42"]
+[Channels.42]
 addr = "0.2.9"
 voltage = 1545
 trip_current = 0.00035
 power_status = true
 
-["Channels.43"]
+[Channels.43]
 addr = "0.2.10"
 voltage = 1745
 trip_current = 0.00035
 power_status = true
 
-["Channels.44"]
+[Channels.44]
 addr = "0.2.11"
 voltage = 1439
 trip_current = 0.00035
 power_status = true
 
-["Channels.45"]
+[Channels.45]
 addr = "0.2.12"
 voltage = 1843
 trip_current = 0.00035
 power_status = true
 
-["Channels.46"]
+[Channels.46]
 addr = "0.2.13"
 voltage = 1521
 trip_current = 0.00035
 power_status = true
 
-["Channels.47"]
+[Channels.47]
 addr = "0.2.14"
 voltage = 0
 trip_current = 0.00035
 power_status = true
 
-["Channels.48"]
+[Channels.48]
 addr = "0.2.15"
 voltage = 0
 trip_current = 0.00035

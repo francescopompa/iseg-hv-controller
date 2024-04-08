@@ -26,9 +26,9 @@ for g in gains:
                 voltage=0
             else:
                 voltage=int(voltage[0])
-            
-            dict = {f'Channels.{i+1}': {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':True}}
+            dict = {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':True}
             f.write('\n')
+            f.write(f'[Channels.{i+1}]\n')
             toml.dump(dict,f)
 
 with open(f'config_matched.toml', mode='w') as f:
@@ -43,8 +43,9 @@ with open(f'config_matched.toml', mode='w') as f:
             else:
                 voltage=int(voltage[0])
             
-            dict = {f'Channels.{i+1}': {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':True}}
+            dict = {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':True}
             f.write('\n')
+            f.write(f'[Channels.{i+1}]\n')
             toml.dump(dict,f)
 
 
@@ -56,8 +57,9 @@ with open(f'config_off.toml', mode='w') as f:
 
             voltage =0
             
-            dict = {f'Channels.{i+1}': {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':False}}
+            dict = {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':False}
             f.write('\n')
+            f.write(f'[Channels.{i+1}]\n')
             toml.dump(dict,f)
 
 
