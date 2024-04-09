@@ -10,6 +10,11 @@ Install the requirements listed in `requirements.txt` with:
 cd iseg-hv-controller
 pip install -r requirements.txt
 ```
+Then you can install with 
+```bash
+cd iseg-hv-controller
+python -m pip install -e .
+```
 
 ### Using Poetry
 (No idea... and no time to test it.)
