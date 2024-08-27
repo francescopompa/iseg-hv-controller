@@ -48,6 +48,23 @@ with open(f'config_matched.toml', mode='w') as f:
             f.write(f'[Channels.{i+1}]\n')
             toml.dump(dict,f)
 
+with open(f'config_matched_v2.toml', mode='w') as f:
+        toml.dump(header_dict, f)
+        for i in range(48):
+            address =f'0.{i//16}.{i%16}'
+            int_address = int(i//16*100+i%16)
+
+            voltage =np.array(df[f'V_f2'][df.HV == int_address])
+            if len(voltage) == 0:
+                voltage=0
+            else:
+                voltage=int(voltage[0])
+            
+            dict = {'addr':address,'voltage':voltage,'trip_current':350e-6,'power_status':True}
+            f.write('\n')
+            f.write(f'[Channels.{i+1}]\n')
+            toml.dump(dict,f)
+
 
 with open(f'config_off.toml', mode='w') as f:
         toml.dump(header_dict_off, f)
