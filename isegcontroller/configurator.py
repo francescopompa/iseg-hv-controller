@@ -21,6 +21,7 @@ class ChannelConfigSection(BaseModel):
     voltage: Optional[float] = None
     trip_current: Optional[float] = None
     power_status: Optional[bool] = False
+    apply : Optional[bool] = True
 
     @validator("addr")
     def addr_crate_module_channel_checker(cls, v):
@@ -41,7 +42,7 @@ class DefaultsConfigSection(BaseModel):
     ramp_speed: Optional[float] = None
     trip_current: Optional[float] = None
     power_status: Optional[bool] = False
-
+    apply: Optional[bool] = True
 
 class ServerConfigSection(BaseModel):
     ip: IPv4Address

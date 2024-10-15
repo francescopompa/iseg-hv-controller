@@ -85,7 +85,10 @@ class Commander:
             config_channel = self.config.channels[ch_id]
             voltage = config_channel.voltage
             trip_current = config_channel.trip_current
-            power_status = config_channel.power_status
+            if config_channel.apply == False:
+                power_status = None
+            else:
+                power_status = config_channel.power_status
             self.modify_channel(ch_id, voltage, trip_current, power_status)
 
     def modify_channel(
@@ -111,8 +114,6 @@ class Commander:
             voltage = default_channel_config.voltage
         if not trip_current:
             trip_current = default_channel_config.trip_current
-        if power_status is None:
-            power_status = default_channel_config.power_status
 
         if voltage:
             channel.setControlVoltageSet(voltage)

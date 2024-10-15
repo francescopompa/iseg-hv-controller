@@ -22,6 +22,7 @@ def validate_channel_args(args: list) -> dict | bool:
         voltage: Optional[float] = None
         trip_current: Optional[float] = None
         power_status: Optional[bool] = None
+        apply: Optional[bool] = None
 
         @validator("voltage", allow_reuse=True)
         def add_voltage_range_checker(cls, v):

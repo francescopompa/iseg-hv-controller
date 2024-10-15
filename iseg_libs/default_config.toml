@@ -9,158 +9,247 @@ voltage = 0 # Volt
 ramp_speed = 40 # % Volt nominal per sec == 20V/s
 # Can only be change module wise
 trip_current = 350E-6 # Ampere
-power_status = true # nicht alle an?
-#what else ?
+apply = false
 
 [Channels.1]
 addr = "0.0.0"
 voltage = 0
-trip_current = 0.000350 # Ampere!
-power_status = true
+trip_current = 350e-6
+apply = false
 
 [Channels.2]
 addr = "0.0.1"
-trip_current = 100e-6
-power_status = false
+trip_current = 350e-6
+apply = false
 
 [Channels.3]
 addr = "0.0.2"
-power_status = false
-
+trip_current = 350e-6
+apply = false
 
 [Channels.4]
 addr = "0.0.3"
-
+trip_current = 350e-6
+apply = false
 
 [Channels.5]
 addr = "0.0.4"
+trip_current = 350e-6
+apply = false
+
 
 [Channels.6]
 addr = "0.0.5"
+trip_current = 350e-6
+apply = false
 
 [Channels.7]
 addr = "0.0.6"
+trip_current = 350e-6
+apply = false
 
 [Channels.8]
 addr = "0.0.7"
+trip_current = 350e-6
+apply = false
 
 [Channels.9]
 addr = "0.0.8"
+trip_current = 350e-6
+apply = false
 
 [Channels.10]
 addr = "0.0.9"
+trip_current = 350e-6
+apply = false
 
 [Channels.11]
 addr = "0.0.10"
+trip_current = 350e-6
+apply = false
 
 [Channels.12]
 addr = "0.0.11"
+trip_current = 350e-6
+apply = false
 
 [Channels.13]
 addr = "0.0.12"
+trip_current = 350e-6
+apply = false
 
 [Channels.14]
 addr = "0.0.13"
+trip_current = 350e-6
+apply = false
 
 [Channels.15]
 addr = "0.0.14"
+trip_current = 350e-6
+apply = false
 
 [Channels.16]
 addr = "0.0.15"
+trip_current = 350e-6
+apply = false
 
 [Channels.17]
 addr = "0.1.0"
+trip_current = 350e-6
+apply = false
 
 [Channels.18]
 addr = "0.1.1"
+trip_current = 350e-6
+apply = false
 
 [Channels.19]
 addr = "0.1.2"
+trip_current = 350e-6
+apply = false
 
 [Channels.20]
 addr = "0.1.3"
+trip_current = 350e-6
+apply = false
 
 [Channels.21]
 addr = "0.1.4"
+trip_current = 350e-6
+apply = false
 
 [Channels.22]
 addr = "0.1.5"
+trip_current = 350e-6
+apply = false
 
 [Channels.23]
 addr = "0.1.6"
+trip_current = 350e-6
+apply = false
 
 [Channels.24]
 addr = "0.1.7"
+trip_current = 350e-6
+apply = false
 
 [Channels.25]
 addr = "0.1.8"
+trip_current = 350e-6
+apply = false
 
 [Channels.26]
 addr = "0.1.9"
+trip_current = 350e-6
+apply = false
 
 [Channels.27]
 addr = "0.1.10"
+trip_current = 350e-6
+apply = false
 
 [Channels.28]
 addr = "0.1.11"
+trip_current = 350e-6
+apply = false
 
 [Channels.29]
 addr = "0.1.12"
+trip_current = 350e-6
+apply = false
 
 [Channels.30]
 addr = "0.1.13"
+trip_current = 350e-6
+apply = false
 
 [Channels.31]
 addr = "0.1.14"
+trip_current = 350e-6
+apply = false
 
 [Channels.32]
 addr = "0.1.15"
+trip_current = 350e-6
+apply = false
 
 [Channels.33]
 addr = "0.2.0"
+trip_current = 350e-6
+apply = false
 
 [Channels.34]
 addr = "0.2.1"
+trip_current = 350e-6
+apply = false
 
 [Channels.35]
 addr = "0.2.2"
+trip_current = 350e-6
+apply = false
 
 [Channels.36]
 addr = "0.2.3"
+trip_current = 350e-6
+apply = false
 
 [Channels.37]
 addr = "0.2.4"
+trip_current = 350e-6
+apply = false
 
 [Channels.38]
 addr = "0.2.5"
+trip_current = 350e-6
+apply = false
 
 [Channels.39]
 addr = "0.2.6"
+trip_current = 350e-6
+apply = false
 
 [Channels.40]
 addr = "0.2.7"
+trip_current = 350e-6
+apply = false
 
 [Channels.41]
 addr = "0.2.8"
+trip_current = 350e-6
+apply = false
 
 [Channels.42]
 addr = "0.2.9"
+trip_current = 350e-6
+apply = false
 
 [Channels.43]
 addr = "0.2.10"
+trip_current = 350e-6
+apply = false
 
 [Channels.44]
 addr = "0.2.11"
+trip_current = 350e-6
+apply = false
 
 [Channels.45]
 addr = "0.2.12"
+trip_current = 350e-6
+apply = false
 
 [Channels.46]
 addr = "0.2.13"
+trip_current = 350e-6
+apply = false
 
 [Channels.47]
 addr = "0.2.14"
+trip_current = 350e-6
+apply = false
 
 [Channels.48]
 addr = "0.2.15"
+trip_current = 350e-6
+apply = false
 
