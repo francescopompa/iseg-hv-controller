@@ -192,7 +192,19 @@ class Interpreter(cmd.Cmd):
         last function call can be removed if TMI
         """
         ics_info.print_basic_info(self.commander.ics_client)
-        print(*ics_info.get_all_channel_infos(self.commander.ics_client), sep="\n")
+        _ = ics_info.get_all_channel_infos(self.commander.ics_client)
+        data = ics_info.get_all_channel_infos(self.commander.ics_client)
+        print(*data, sep="\n")
+        return data
+
+    def get_info(self):
+        '''
+        It only returns the info, to be used in the slow control
+        '''
+        _ = ics_info.get_all_channel_infos(self.commander.ics_client)
+        data = ics_info.get_all_channel_infos(self.commander.ics_client)        
+        return data
+
 
     def do_defaults(self, line):
         """
